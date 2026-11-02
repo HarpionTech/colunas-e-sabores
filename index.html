@@ -11,7 +11,9 @@
   <meta property="og:description" content="Uma entrada marcante. Um encontro inesquecível. Buffet para encontros e celebrações maçônicas.">
   <meta property="og:image" content="assets/img/og.jpg">
   <meta property="og:locale" content="pt_BR">
-  <link rel="icon" type="image/png" href="assets/img/logo.png">
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="assets/img/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -164,15 +166,30 @@
           <img src="assets/img/mesa.jpg" alt="" width="1448" height="800" loading="lazy">
         </picture>
       </div>
-      <div class="contato__inner">
+      <div class="contato__inner contato__inner--cardapio">
         <div class="contato__chamada" data-revela>
           <p class="rotulo">Contato</p>
           <h2 id="titulo-contato" class="titulo-2"><em>Seu próximo encontro começa aqui.</em></h2>
-          <p class="texto">Preencha três dados e a mensagem já chega pronta no WhatsApp. Se preferir, fale direto com a gente.</p>
+          <p class="texto">Marque os pratos que combinam com o seu encontro, preencha três dados e a mensagem chega pronta no WhatsApp. Valores e disponibilidade são confirmados no orçamento.</p>
           <a class="link-seta" href="https://www.instagram.com/colunasesabores/" target="_blank" rel="noopener">@colunasesabores no Instagram <span aria-hidden="true">↗</span></a>
         </div>
 
+        <div class="escolha" data-revela>
+          <div class="escolha__topo">
+            <h3 class="escolha__titulo">Monte seu cardápio</h3>
+            <p class="escolha__dica">Escolha quantos quiser. Nenhum prato é obrigatório.</p>
+          </div>
+          <div class="abas" role="tablist" aria-label="Categorias do cardápio" data-abas></div>
+          <div class="escolha__grade" role="tabpanel" data-pratos aria-live="off"></div>
+          <noscript><p class="escolha__dica">Ative o JavaScript para montar o cardápio, ou fale com a gente pelo Instagram.</p></noscript>
+        </div>
+
         <form class="pedido" data-pedido novalidate data-revela>
+          <div class="selecao" data-selecao>
+            <p class="selecao__titulo">Seu cardápio <span class="selecao__total" data-selecao-total>0 pratos</span></p>
+            <p class="selecao__vazio" data-selecao-vazio>Nenhum prato marcado ainda. Você pode escolher ao lado ou deixar para a conversa.</p>
+            <ul class="selecao__lista" data-selecao-lista></ul>
+          </div>
           <div class="campo">
             <label for="tipo">Tipo de encontro</label>
             <select id="tipo" name="tipo" required>

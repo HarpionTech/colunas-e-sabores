@@ -2,6 +2,48 @@ const CONFIG = {
   // Número do WhatsApp só com dígitos, com DDI e DDD (ex.: "5511999998888").
   // Vazio: o WhatsApp abre e a pessoa escolhe o contato.
   whatsapp: "",
+
+  // Cardápio da seção de contato. Para trocar a foto de um prato, salve a imagem em assets/img
+  // (jpg + webp com o mesmo nome) e informe o caminho sem extensão em `foto`.
+  // Sem `foto`, o card mostra o símbolo da casa.
+  cardapio: [
+    {
+      categoria: "Entradas",
+      pratos: [
+        { nome: "Canapés de salmão defumado", desc: "Pão tostado, cream cheese e ervas", foto: "assets/img/prato-entrada" },
+        { nome: "Bruschetta de tomate", desc: "Pão italiano, tomate fresco e manjericão" },
+        { nome: "Tábua de frios", desc: "Queijos, embutidos, castanhas e geleia" },
+        { nome: "Caldo verde", desc: "Servido em copinhos, com linguiça" },
+      ],
+    },
+    {
+      categoria: "Pratos principais",
+      pratos: [
+        { nome: "Carne assada ao molho", desc: "Fatiada, com alecrim e molho da casa", foto: "assets/img/prato-carne" },
+        { nome: "Frango ao molho de mostarda", desc: "Peito grelhado com molho cremoso" },
+        { nome: "Lombo com abacaxi", desc: "Assado lentamente, abacaxi caramelizado" },
+        { nome: "Peixe ao molho de alcaparras", desc: "Filé grelhado na manteiga" },
+      ],
+    },
+    {
+      categoria: "Acompanhamentos",
+      pratos: [
+        { nome: "Gratinado de batatas", desc: "Batatas em creme com queijo dourado", foto: "assets/img/prato-gratinado" },
+        { nome: "Arroz à grega", desc: "Com legumes e uvas-passas" },
+        { nome: "Salada da estação", desc: "Folhas, tomate-cereja e molho de mostarda e mel" },
+        { nome: "Farofa da casa", desc: "Com bacon e cebola dourada" },
+      ],
+    },
+    {
+      categoria: "Sobremesas",
+      pratos: [
+        { nome: "Mousse de chocolate", desc: "Em taças individuais" },
+        { nome: "Pudim de leite", desc: "Com calda de caramelo" },
+        { nome: "Pavê de chocolate", desc: "Camadas de creme e biscoito" },
+        { nome: "Frutas da estação", desc: "Fatiadas e servidas no gelo" },
+      ],
+    },
+  ],
 };
 
 (() => {
@@ -212,9 +254,108 @@ const CONFIG = {
   }
 })();
 
+function iniciaCardapio() {
+  const abas = document.querySelector("[data-abas]");
+  const grade = document.querySelector("[data-pratos]");
+  const lista = document.querySelector("[data-selecao-lista]");
+  const vazio = document.querySelector("[data-selecao-vazio]");
+  const total = document.querySelector("[data-selecao-total]");
+  if (!abas || !grade) return () => [];
+
+  const check = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const fotoHtml = (p) => p.foto
+    ? `<span class="prato__foto"><picture><source srcset="${p.foto}.webp" type="image/webp"><img src="${p.foto}.jpg" alt="" width="1024" height="768" loading="lazy"></picture></span>`
+    : `<span class="prato__foto prato__foto--vazia"><img src="assets/img/simbolo.png" alt="" width="174" height="240" loading="lazy"><span>Foto em breve</span></span>`;
+
+  const botoesAba = [];
+  CONFIG.cardapio.forEach((cat, i) => {
+    const aba = document.createElement("button");
+    aba.type = "button";
+    aba.className = "aba";
+    aba.id = `aba-${i}`;
+    aba.setAttribute("role", "tab");
+    aba.setAttribute("aria-controls", "pratos-painel");
+    aba.innerHTML = `${cat.categoria} <span class="aba__conta" hidden>0</span>`;
+    aba.addEventListener("click", () => seleciona(i, true));
+    abas.appendChild(aba);
+    botoesAba.push(aba);
+
+    cat.pratos.forEach((p, j) => {
+      const card = document.createElement("label");
+      card.className = "prato";
+      card.dataset.cat = i;
+      const id = `prato-${i}-${j}`;
+      card.innerHTML = `<input class="prato__check" type="checkbox" id="${id}" value="${p.nome}" data-cat="${i}">${fotoHtml(p)}<span class="prato__info"><span class="prato__nome">${p.nome}</span><span class="prato__desc">${p.desc || ""}</span></span><span class="prato__marca" aria-hidden="true">${check}</span>`;
+      grade.appendChild(card);
+    });
+  });
+  grade.id = "pratos-painel";
+
+  // teclado nas abas: setas esquerda/direita, Home e End
+  abas.addEventListener("keydown", (e) => {
+    const atual = botoesAba.findIndex((b) => b.getAttribute("aria-selected") === "true");
+    const mapa = { ArrowRight: atual + 1, ArrowLeft: atual - 1, Home: 0, End: botoesAba.length - 1 };
+    if (!(e.key in mapa)) return;
+    e.preventDefault();
+    const n = (mapa[e.key] + botoesAba.length) % botoesAba.length;
+    seleciona(n, true);
+    botoesAba[n].focus();
+  });
+
+  function seleciona(i, animar) {
+    botoesAba.forEach((b, k) => {
+      b.setAttribute("aria-selected", String(k === i));
+      b.tabIndex = k === i ? 0 : -1;
+    });
+    grade.setAttribute("aria-labelledby", botoesAba[i].id);
+    grade.querySelectorAll(".prato").forEach((c) => { c.hidden = Number(c.dataset.cat) !== i; });
+    if (animar && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      grade.classList.remove("is-trocando");
+      void grade.offsetWidth;
+      grade.classList.add("is-trocando");
+    }
+  }
+  seleciona(0, false);
+
+  const marcados = () => [...grade.querySelectorAll(".prato__check:checked")];
+  const atualiza = () => {
+    const sel = marcados();
+    total.textContent = sel.length === 1 ? "1 prato" : `${sel.length} pratos`;
+    vazio.hidden = sel.length > 0;
+    lista.replaceChildren(...sel.map((c) => {
+      const li = document.createElement("li");
+      li.className = "selecao__item";
+      li.append(c.value);
+      const tirar = document.createElement("button");
+      tirar.type = "button";
+      tirar.className = "selecao__tirar";
+      tirar.setAttribute("aria-label", `Tirar ${c.value}`);
+      tirar.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      tirar.addEventListener("click", () => { c.checked = false; atualiza(); });
+      li.append(tirar);
+      return li;
+    }));
+    botoesAba.forEach((b, k) => {
+      const n = sel.filter((c) => Number(c.dataset.cat) === k).length;
+      const conta = b.querySelector(".aba__conta");
+      conta.textContent = n;
+      conta.hidden = n === 0;
+    });
+  };
+  grade.addEventListener("change", atualiza);
+  atualiza();
+
+  // linhas da mensagem, agrupadas por categoria
+  return () => CONFIG.cardapio
+    .map((cat, k) => [cat.categoria, marcados().filter((c) => Number(c.dataset.cat) === k).map((c) => c.value)])
+    .filter(([, nomes]) => nomes.length)
+    .map(([categoria, nomes]) => `• ${categoria}: ${nomes.join(", ")}`);
+}
+
 function iniciaPedido() {
   const form = document.querySelector("[data-pedido]");
   if (!form) return;
+  const pratosEscolhidos = iniciaCardapio();
   const status = form.querySelector("[data-pedido-status]");
   const botao = form.querySelector('button[type="submit"]');
   const rotuloBotao = botao.innerHTML;
@@ -257,9 +398,13 @@ function iniciaPedido() {
       `Tipo de encontro: ${form.tipo.value}`,
       `Data prevista: ${d}/${m}/${a}`,
       `Pessoas: ${form.pessoas.value}`,
-    ].join("\n");
+    ];
+    const pratos = pratosEscolhidos();
+    if (pratos.length) texto.push("", "Pratos de interesse:", ...pratos);
+    else texto.push("", "Cardápio: gostaria de sugestões.");
+    const mensagem = texto.join("\n");
     const numero = CONFIG.whatsapp.replace(/\D/g, "");
-    const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 
     botao.disabled = true;
     botao.textContent = "Abrindo o WhatsApp…";
