@@ -10,7 +10,7 @@
   --erro: #f0a089;
 
   --fonte-titulos: "EB Garamond", Georgia, "Times New Roman", serif;
-  --fonte-corpo: "Alegreya Sans", "Segoe UI", Arial, sans-serif;
+  --fonte-corpo: "Lato", "Segoe UI", Arial, sans-serif;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -19,7 +19,7 @@
   --largura: 1240px;
   --conteudo: 1240px;
   --topo-h: 84px;
-  --cornija-h: 44px;
+  --cornija-h: 34px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -31,8 +31,8 @@ body {
   background: var(--fundo);
   color: var(--marfim);
   font-family: var(--fonte-corpo);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -106,7 +106,7 @@ em { font-style: italic; }
   text-wrap: balance;
 }
 .titulo-2 em { color: var(--ouro-claro); font-weight: 400; }
-.texto { margin-top: 22px; max-width: 54ch; color: var(--marfim-2); font-size: 1.08rem; font-weight: 500; text-shadow: 0 1px 2px rgb(0 0 0 / 0.6); }
+.texto { margin-top: 20px; max-width: 54ch; color: var(--marfim-2); font-size: 1.0625rem; line-height: 1.65; text-shadow: 0 1px 2px rgb(0 0 0 / 0.5); }
 
 /* Cabeçalho */
 .topo {
@@ -202,8 +202,11 @@ em { font-style: italic; }
 .linha { display: block; overflow: hidden; padding: 0.04em 0 0.1em; }
 .linha__in { display: inline-block; }
 .abertura__apoio {
-  margin-top: 18px; font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--marfim);
-  text-shadow: 0 1px 14px rgb(0 0 0 / 0.7);
+  display: inline-block; margin-top: 22px; padding: 8px 22px;
+  font-size: clamp(1.1rem, 1.75vw, 1.45rem); letter-spacing: 0.015em; color: var(--marfim);
+  background: rgb(10 8 5 / 0.5);
+  border-block: 1px solid rgb(214 170 85 / 0.55);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.7);
 }
 .abertura__acoes { display: flex; align-items: center; justify-content: center; gap: 36px; flex-wrap: wrap; margin-top: 36px; }
 .abertura__acoes .link-seta { text-shadow: 0 1px 12px rgb(0 0 0 / 0.7); }
@@ -246,14 +249,9 @@ em { font-style: italic; }
 .fundo-salao::after {
   content: ""; position: absolute; inset: 0;
   background:
-    radial-gradient(48% 62% at 50% 50%, rgb(12 10 7 / 0.74), rgb(12 10 7 / 0.5) 70%, rgb(12 10 7 / 0.38)),
+    linear-gradient(90deg, rgb(12 10 7 / 0.8), rgb(12 10 7 / 0.66) 15%, rgb(12 10 7 / 0.28) 24%, rgb(12 10 7 / 0.28) 76%, rgb(12 10 7 / 0.66) 85%, rgb(12 10 7 / 0.8)),
+    radial-gradient(52% 64% at 50% 50%, rgb(12 10 7 / 0.6), rgb(12 10 7 / 0.25) 75%, transparent),
     linear-gradient(180deg, rgb(12 10 7 / 0.35), transparent 30%, transparent 70%, rgb(12 10 7 / 0.55));
-}
-.fundo-salao__logo {
-  position: absolute; left: 50%; top: 50%; z-index: 1;
-  width: min(46vw, 640px); height: auto;
-  transform: translate(-50%, -50%);
-  opacity: 0.03; filter: saturate(0.5);
 }
 
 /* Cornija: sai da abertura e trava logo abaixo do cabeçalho */
@@ -263,7 +261,7 @@ em { font-style: italic; }
   background:
     url("../assets/img/cornija-esq.webp") left center / auto 100% no-repeat,
     url("../assets/img/cornija-dir.webp") right center / auto 100% no-repeat;
-  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.7));
+  filter: brightness(0.8) saturate(0.85) drop-shadow(0 8px 12px rgb(0 0 0 / 0.6));
 }
 .cornija::before {
   content: ""; position: absolute; inset: 0 calc(var(--cornija-h) * 0.66); z-index: -1;
@@ -292,56 +290,56 @@ em { font-style: italic; }
 }
 .tempo__num {
   display: block; color: var(--ouro);
-  font: italic 400 clamp(3rem, 5vw, 4.4rem)/0.9 var(--fonte-titulos);
+  font: italic 400 clamp(2.4rem, 3.6vw, 3.4rem)/0.9 var(--fonte-titulos);
 }
-.tempo__titulo { margin-top: 18px; font-size: clamp(1.6rem, 2.4vw, 2rem); }
-.tempo__texto { margin-top: 12px; color: var(--marfim-2); max-width: 36ch; font-weight: 500; text-shadow: 0 1px 2px rgb(0 0 0 / 0.6); }
+.tempo__titulo { margin-top: 14px; font-size: clamp(1.5rem, 2.1vw, 1.85rem); }
+.tempo__texto { margin-top: 10px; color: var(--marfim-2); max-width: 34ch; font-size: 1rem; line-height: 1.65; text-shadow: 0 1px 2px rgb(0 0 0 / 0.5); }
 
 /* Nossa cozinha */
 .cozinha { position: relative; }
 .cozinha__inner {
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(40px, 6vw, 96px);
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: center; gap: clamp(36px, 5vw, 72px);
   max-width: calc(var(--conteudo) + 2 * var(--gutter)); margin: 0 auto;
   padding: clamp(96px, 13vw, 170px) var(--gutter);
 }
-.cozinha__texto .link-seta { margin-top: 36px; }
-.cardapio { list-style: none; margin: 36px 0 0; padding: 0; max-width: 440px; }
+.cozinha__titulo { font-size: clamp(2.3rem, 3.7vw, 3.4rem); max-width: 14ch; }
+.cozinha__links { display: grid; justify-items: start; gap: 12px; margin-top: 30px; }
+.link-seta--leve { font-size: 1.02rem; color: var(--marfim-2); }
+.cardapio { list-style: none; margin: 28px 0 0; padding: 0; max-width: 440px; }
 .cardapio li {
-  display: flex; align-items: baseline; gap: 12px; padding: 12px 0;
-  font-family: var(--fonte-titulos); font-size: 1.25rem;
+  display: flex; align-items: baseline; gap: 12px; padding: 10px 0;
+  font-family: var(--fonte-titulos); font-size: 1.2rem;
 }
-.cardapio li span:last-child { color: var(--marfim-2); font: italic 1.05rem var(--fonte-titulos); }
+.cardapio li span:last-child { color: var(--marfim-2); font-size: 0.95rem; }
 .cardapio__fio { flex: 1; border-bottom: 1px dotted rgb(214 170 85 / 0.5); transform: translateY(-4px); }
 
-/* Sem stacking context nas .foto: molduras ficam atrás de todas as fotos e as legendas acima de todas as linhas */
-.galeria { position: relative; aspect-ratio: 7 / 7.4; isolation: isolate; }
-.foto { position: absolute; margin: 0; }
-.foto--a { left: 0; top: 0; width: 64%; }
-.foto--b { right: 0; top: 36%; width: 58%; }
-.foto--c { left: 2%; bottom: 0; width: 38%; }
-.foto--a .foto__janela { z-index: 2; }
-.foto--b .foto__janela { z-index: 3; }
-.foto--c .foto__janela { z-index: 4; }
+/* Galeria: a foto principal ocupa a altura das duas secundárias; nada se sobrepõe */
+.galeria {
+  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 18px 20px; isolation: isolate;
+}
+.foto { position: relative; margin: 0; }
+.foto--a { grid-row: 1 / span 2; display: flex; flex-direction: column; }
+.foto--a .foto__janela { flex: 1; aspect-ratio: auto; min-height: 260px; }
+.foto--a .foto__janela img { position: absolute; inset: 0; }
 .foto__janela {
-  position: relative; overflow: hidden; aspect-ratio: 4 / 3;
-  border: 1px solid rgb(214 170 85 / 0.75);
-  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.8);
+  position: relative; z-index: 2; overflow: hidden; aspect-ratio: 4 / 3;
+  border: 1px solid rgb(214 170 85 / 0.7);
+  box-shadow: 0 24px 50px -22px rgb(0 0 0 / 0.85);
   background: #0c0b08;
 }
 .foto__janela img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
 .foto__moldura {
-  position: absolute; inset: 0; z-index: 1;
-  border: 1px solid rgb(214 170 85 / 0.45);
-  transform: translate(22px, 22px);
+  position: absolute; inset: 0 0 auto; z-index: 1; height: calc(100% - 34px);
+  border: 1px solid rgb(214 170 85 / 0.4);
+  transform: translate(-14px, -14px);
 }
-.foto--b .foto__moldura { transform: translate(-22px, -22px); }
 .foto figcaption {
-  position: relative; z-index: 5;
-  width: fit-content; margin-top: 10px; padding: 4px 12px;
-  background: rgb(14 12 9 / 0.94); border-radius: 2px;
-  color: var(--marfim); font: italic 500 1.02rem var(--fonte-titulos);
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 10px; color: var(--marfim-2);
+  font-size: 0.85rem; letter-spacing: 0.04em;
 }
-.foto--b figcaption { margin-left: auto; }
+.foto figcaption::before { content: ""; width: 18px; height: 1px; background: var(--ouro); flex: none; }
 
 /* Contato */
 .contato { position: relative; }
@@ -349,7 +347,7 @@ em { font-style: italic; }
 
 /* Palco de cenas (desktop com movimento): cozinha e contato entram no lugar, por animação */
 @media (min-width: 1100px) {
-  :root { --conteudo: min(1160px, 64vw); }
+  :root { --conteudo: min(1180px, 74vw); }
 }
 .cenas-ativas .cenas { position: relative; height: 150vh; height: 150svh; pointer-events: none; }
 .cenas-ativas .cenas__palco { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
@@ -359,7 +357,7 @@ em { font-style: italic; }
 .cenas-ativas .tempos { margin-top: clamp(40px, 6vh, 72px); }
 .cenas-ativas .cozinha { position: absolute; inset: 0; display: grid; align-items: center; pointer-events: auto; }
 .cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 32px; }
-.cenas-ativas .galeria { width: min(100%, calc((100svh - var(--topo-h) - var(--cornija-h) - 120px) * 7 / 7.4)); justify-self: end; }
+.cenas-ativas .galeria { width: 100%; max-width: calc((100svh - var(--topo-h) - var(--cornija-h) - 110px) * 1.45); justify-self: end; }
 .cenas-ativas .contato { z-index: 3; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
 .cenas-ativas .contato__inner { position: sticky; top: 0; pointer-events: auto; padding-top: calc(var(--topo-h) + var(--cornija-h) + 40px); }
 .cenas-ativas .contato__espaco { display: block; height: 10vh; height: 10svh; }
@@ -368,7 +366,7 @@ em { font-style: italic; }
 .contato__inner {
   display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: center; gap: clamp(40px, 6vw, 96px);
   max-width: calc(var(--conteudo) + 2 * var(--gutter)); margin: 0 auto;
-  padding: clamp(96px, 13vw, 170px) var(--gutter);
+  padding: clamp(96px, 13vw, 170px) var(--gutter) 40px;
 }
 .contato__inner--cardapio {
   grid-template-columns: minmax(0, 7fr) minmax(0, 4.6fr);
@@ -394,7 +392,7 @@ em { font-style: italic; }
 .escolha__botao[aria-expanded="true"] { border-color: var(--ouro); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .escolha__textos { display: grid; gap: 4px; flex: 1; }
 .escolha__titulo { font: 500 clamp(1.5rem, 2.3vw, 1.9rem)/1.15 var(--fonte-titulos); }
-.escolha__dica { color: var(--marfim-2); font-size: 0.95rem; font-weight: 500; }
+.escolha__dica { color: var(--marfim-2); font-size: 0.95rem; }
 .escolha__conta {
   min-width: 26px; height: 26px; padding: 0 8px; border-radius: 13px;
   display: inline-grid; place-items: center;
@@ -477,7 +475,7 @@ em { font-style: italic; }
 .prato__foto--vazia span { color: var(--marfim-2); font: italic 0.9rem var(--fonte-titulos); }
 .prato__info { display: grid; align-content: start; gap: 4px; padding: 14px 16px 16px; }
 .prato__nome { font: 500 1.2rem/1.2 var(--fonte-titulos); color: var(--marfim); }
-.prato__desc { color: var(--marfim-2); font-size: 0.92rem; font-weight: 500; line-height: 1.45; }
+.prato__desc { color: var(--marfim-2); font-size: 0.9rem; line-height: 1.5; }
 .prato__marca {
   position: absolute; top: 10px; right: 10px;
   display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
@@ -556,33 +554,40 @@ em { font-style: italic; }
 .pedido__nota.is-ok { color: var(--ouro-claro); }
 
 /* Rodapé: guardanapo de linho dobrado em triângulo, com a ponta para cima; a página termina na base dele */
-.rodape { position: relative; overflow: hidden; padding-top: 24px; }
+.rodape { position: relative; overflow: hidden; padding-top: 4px; }
 .guardanapo {
   --g-larg: min(780px, 96vw);
   position: relative; margin: 0 auto;
   width: var(--g-larg); aspect-ratio: 2.8 / 1;
   container-type: inline-size;
   transform-origin: 50% 100%;
-  filter: drop-shadow(0 -10px 22px rgb(0 0 0 / 0.6));
+  filter: drop-shadow(0 -6px 18px rgb(0 0 0 / 0.5)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.5));
 }
-.guardanapo__tecido, .guardanapo__baixo { position: absolute; inset: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.guardanapo__tecido, .guardanapo__baixo { position: absolute; clip-path: polygon(48.30% 3.40%, 48.73% 2.65%, 49.15% 2.12%, 49.58% 1.80%, 50.00% 1.70%, 50.42% 1.80%, 50.85% 2.12%, 51.27% 2.65%, 51.70% 3.40%, 56.54% 12.60%, 61.37% 21.88%, 66.18% 31.23%, 70.98% 40.65%, 75.75% 50.15%, 80.51% 59.72%, 85.25% 69.36%, 89.97% 79.08%, 94.68% 88.87%, 99.36% 98.73%, 99.56% 99.18%, 99.65% 99.54%, 99.62% 99.80%, 99.48% 99.95%, 99.22% 100.00%, 0.78% 100.00%, 0.52% 99.95%, 0.38% 99.80%, 0.35% 99.54%, 0.44% 99.18%, 0.64% 98.73%, 5.32% 88.87%, 10.03% 79.08%, 14.75% 69.36%, 19.49% 59.72%, 24.25% 50.15%, 29.02% 40.65%, 33.82% 31.23%, 38.63% 21.88%, 43.46% 12.60%); }
+/* Camada de baixo: aparece como uma borda fina e uniforme em volta da de cima */
 .guardanapo__baixo {
-  background: #120d09;
-  transform: translate(1.6%, -2.4%) rotate(1.2deg); transform-origin: 50% 100%;
+  inset: 0;
+  background:
+    linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.5)),
+    url("../assets/img/tecido.webp") center / 460px auto repeat,
+    #2a0a0e;
 }
 .guardanapo__tecido {
+  inset: 7px 6px 0;
   background:
-    linear-gradient(90deg, rgb(255 240 210 / 0.05), transparent 30%, transparent 49.6%, rgb(0 0 0 / 0.28) 50%, rgb(0 0 0 / 0.08) 62%, transparent 80%),
-    linear-gradient(0deg, rgb(0 0 0 / 0.35), transparent 14%),
-    linear-gradient(20deg, rgb(0 0 0 / 0.25), transparent 45%, rgb(255 235 200 / 0.06)),
-    url("../assets/img/tecido.webp") center / 520px auto repeat,
-    #1d1510;
+    radial-gradient(90% 75% at 30% 18%, rgb(255 225 205 / 0.11), transparent 60%),
+    linear-gradient(100deg, transparent 43%, rgb(0 0 0 / 0.14) 50%, transparent 58%),
+    linear-gradient(90deg, rgb(255 230 210 / 0.05), transparent 42%, rgb(0 0 0 / 0.18)),
+    linear-gradient(0deg, rgb(0 0 0 / 0.3), transparent 18%),
+    url("../assets/img/tecido.webp") center / 460px auto repeat,
+    #4a1018;
 }
-.guardanapo__costura { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.guardanapo__costura { position: absolute; inset: 7px 6px 0; width: calc(100% - 12px); height: calc(100% - 7px); overflow: visible; }
 .guardanapo__costura polygon {
-  fill: none; stroke: var(--ouro); stroke-width: 1.2; stroke-dasharray: 7 5; opacity: 0.7;
+  fill: none; stroke: var(--ouro); stroke-width: 1.2; stroke-dasharray: 7 5; opacity: 0.75;
   vector-effect: non-scaling-stroke;
 }
+.costura--estreita { display: none; }
 .guardanapo__conteudo {
   position: absolute; left: 0; right: 0; bottom: 17%;
   display: grid; justify-items: center; gap: 1.2cqw; text-align: center;
@@ -597,6 +602,9 @@ em { font-style: italic; }
 @media (hover: hover) { .rodape__legal a:hover { color: var(--ouro-claro); } }
 @media (max-width: 640px) {
   .guardanapo { aspect-ratio: 1 / 0.72; }
+  .guardanapo__tecido, .guardanapo__baixo { clip-path: polygon(47.44% 5.11%, 48.08% 3.99%, 48.72% 3.20%, 49.36% 2.72%, 50.00% 2.56%, 50.64% 2.72%, 51.28% 3.20%, 51.92% 3.99%, 52.56% 5.11%, 57.45% 14.17%, 62.30% 23.28%, 67.08% 32.44%, 71.81% 41.66%, 76.49% 50.93%, 81.11% 60.26%, 85.68% 69.63%, 90.19% 79.06%, 94.64% 88.55%, 99.04% 98.08%, 99.32% 98.77%, 99.39% 99.31%, 99.24% 99.69%, 98.89% 99.92%, 98.32% 100.00%, 1.68% 100.00%, 1.11% 99.92%, 0.76% 99.69%, 0.61% 99.31%, 0.68% 98.77%, 0.96% 98.08%, 5.36% 88.55%, 9.81% 79.06%, 14.32% 69.63%, 18.89% 60.26%, 23.51% 50.93%, 28.19% 41.66%, 32.92% 32.44%, 37.70% 23.28%, 42.55% 14.17%); }
+  .costura--larga { display: none; }
+  .costura--estreita { display: inline; }
   .guardanapo__conteudo { bottom: 12%; gap: 8px; }
 }
 
@@ -613,7 +621,8 @@ em { font-style: italic; }
   .contato__inner--cardapio .pedido { position: static; }
 }
 @media (max-width: 640px) {
-  :root { --topo-h: 68px; --cornija-h: 30px; }
+  :root { --topo-h: 68px; --cornija-h: 22px; }
+  .fundo-salao::after { background: rgb(12 10 7 / 0.66); }
   .topo__inner { gap: 16px; }
   .topo__logo img { height: 42px; }
   .topo__cta { min-height: 40px; padding: 8px 14px; font-size: 0.85rem; }
@@ -621,13 +630,10 @@ em { font-style: italic; }
   .abertura__conteudo { transform: translate(-50%, -58%); }
   .abertura__acoes { flex-direction: column; gap: 18px; }
   .abertura__titulo { font-size: 2.2rem; }
-  .foto figcaption { margin-top: 8px; }
-  .galeria { aspect-ratio: auto; display: grid; gap: 40px; }
-  .foto { position: relative; width: 100% !important; inset: auto !important; }
-  .foto--b { width: 88% !important; justify-self: end; }
-  .foto--c { width: 72% !important; }
-  .foto__moldura { transform: translate(12px, 12px); }
-  .foto--b .foto__moldura { transform: translate(-12px, -12px); }
+  .galeria { grid-template-columns: 1fr 1fr; gap: 16px 12px; }
+  .foto--a { grid-row: auto; grid-column: 1 / -1; }
+  .foto--a .foto__janela { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+  .foto__moldura { display: none; }
   .pedido__linha { grid-template-columns: 1fr; }
   .escolha__grade { gap: 10px; }
   .escolha__botao { padding: 16px; gap: 12px; }

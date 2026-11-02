@@ -65,13 +65,13 @@ const CONFIG = {
     gsap.ticker.lagSmoothing(0);
   }
 
-  // No palco de cenas, cozinha e contato só aparecem depois do gatilho: a âncora vai um pouco além do topo
+  // No palco de cenas, experiência e contato só aparecem depois do gatilho: a âncora vai um pouco além do topo
   const destino = (id, alvo) => {
     const topoDe = (el) => el.getBoundingClientRect().top + window.scrollY;
     if (doc.classList.contains("cenas-ativas")) {
       const cenas = topoDe(document.querySelector("[data-cenas]"));
-      if (id === "#experiencia") return cenas + 1;
-      if (id === "#cozinha") return cenas + window.innerHeight * 0.3;
+      if (id === "#cozinha") return cenas + 1;
+      if (id === "#experiencia") return cenas + window.innerHeight * 0.3;
       if (id === "#contato") return topoDe(alvo) + window.innerHeight * 0.05;
     }
     return id === "#contato" ? topoDe(alvo) : topoDe(alvo) - topoAltura() + 1;
@@ -86,7 +86,8 @@ const CONFIG = {
       if (!alvo) return;
       e.preventDefault();
       const focar = () => {
-        if (id === "#contato") setTimeout(() => document.getElementById("tipo").focus({ preventScroll: true }), 900);
+        if (a.hasAttribute("data-abre-cardapio")) setTimeout(() => abreCardapio(), 900);
+        else if (id === "#contato") setTimeout(() => document.getElementById("tipo").focus({ preventScroll: true }), 900);
         else if (id === "#conteudo") alvo.setAttribute("tabindex", "-1"), alvo.focus({ preventScroll: true });
       };
       if (lenis) {
@@ -107,7 +108,7 @@ const CONFIG = {
   else window.addEventListener("scroll", atualizaTopo, { passive: true });
   atualizaTopo();
 
-  iniciaPedido();
+  const abreCardapio = iniciaPedido();
 
   if (!animar) return;
 
@@ -168,17 +169,30 @@ const CONFIG = {
       onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.1, overwrite: true }),
     });
   };
-  revelaPorRolagem(".experiencia [data-revela]");
 
-  // Foto: a janela abre de baixo para cima e a moldura se desloca para o lugar
+  // Foto: a janela abre de baixo para cima e a moldura (só na principal) se desloca para o lugar
   const fotos = [...document.querySelectorAll("[data-foto]")];
-  const abreFoto = (foto) => gsap.timeline()
-    .fromTo(foto.querySelector(".foto__janela"), { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
-    .from(foto.querySelector(".foto__janela img"), { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
-    .from(foto.querySelector(".foto__moldura"), { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35)
-    .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
+  const abreFoto = (foto) => {
+    const tl = gsap.timeline()
+      .fromTo(foto.querySelector(".foto__janela"), { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
+      .from(foto.querySelector(".foto__janela img"), { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
+      .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
+    const moldura = foto.querySelector(".foto__moldura");
+    if (moldura) tl.from(moldura, { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35);
+    return tl;
+  };
 
-  // Rodapé: o guardanapo desdobra a partir da borda da mesa
+  // A cozinha é a primeira seção depois da abertura e se revela ao rolar, em qualquer tela
+  revelaPorRolagem(".cozinha [data-revela]");
+  fotos.forEach((foto, i) => {
+    gsap.timeline({ scrollTrigger: { trigger: foto, start: "top 88%", once: true }, delay: i * 0.1 }).add(abreFoto(foto));
+  });
+  gsap.from(".cardapio__fio", {
+    scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
+    scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
+  });
+
+  // Rodapé: o guardanapo desdobra a partir da base
   gsap.fromTo("[data-guardanapo]", { scaleY: 0.06, opacity: 0.4 }, {
     scaleY: 1, opacity: 1, duration: 1.2, ease: "power3.out", clearProps: "transform,opacity",
     scrollTrigger: { trigger: ".rodape", start: "top 96%", once: true },
@@ -187,27 +201,27 @@ const CONFIG = {
   const palco = "(min-width: 1100px) and (min-height: 680px)";
   const mm = gsap.matchMedia();
 
-  // Desktop: cozinha e contato são cenas que entram no lugar, disparadas pela rolagem
+  // Desktop: a cozinha trava sob a cornija; experiência e contato entram pela lateral
   mm.add(palco, () => {
     doc.classList.add("cenas-ativas");
     const cozinha = document.querySelector(".cozinha");
+    const experiencia = document.querySelector(".experiencia");
     const contato = document.querySelector(".contato__inner");
 
-    // Depois da experiência, as cenas entram pela lateral direita e a que sai segue para a esquerda
+    // A cena que entra vem da direita e a que sai segue para a esquerda
     const entra = () => window.innerWidth * 0.6;
     const sai = () => -window.innerWidth * 0.45;
-    const entraCozinha = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(".experiencia__inner", { x: sai, autoAlpha: 0, duration: 0.9, ease: "power2.inOut" }, 0)
-      .fromTo(cozinha, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
-      .fromTo(".cozinha__inner", { x: entra }, { x: 0, duration: 1.3 }, 0.15)
-      .from(".cozinha__texto > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
-      .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.9);
-    fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.6 + i * 0.14));
+    const entraExperiencia = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
+      .to(".cozinha__inner", { x: sai, autoAlpha: 0, duration: 0.9, ease: "power2.inOut" }, 0)
+      .fromTo(experiencia, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
+      .fromTo(".experiencia__inner", { x: entra }, { x: 0, duration: 1.3 }, 0.15)
+      .from(".experiencia__cabeca > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
+      .from(".tempo", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.1 }, 0.7);
 
     // fromTo com valores fixos: a saída não pode herdar a posição de uma entrada ainda em andamento
     const entraContato = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .fromTo(".cozinha__inner", { x: 0 }, { x: sai, duration: 0.9, ease: "power2.inOut", immediateRender: false }, 0)
-      .fromTo(cozinha, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.4, ease: "power1.in", immediateRender: false }, 0.5)
+      .fromTo(".experiencia__inner", { x: 0 }, { x: sai, duration: 0.9, ease: "power2.inOut", immediateRender: false }, 0)
+      .fromTo(experiencia, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.4, ease: "power1.in", immediateRender: false }, 0.5)
       .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
       .fromTo(contato, { x: entra }, { x: 0, duration: 1.3 }, 0.15)
       .from(".contato__chamada > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
@@ -216,12 +230,12 @@ const CONFIG = {
 
     ScrollTrigger.create({
       trigger: "[data-cenas]", start: "top top-=20%",
-      onEnter: () => entraCozinha.timeScale(1).play(),
-      onLeaveBack: () => { entraContato.progress(0).pause(); entraCozinha.timeScale(1.6).reverse(); },
+      onEnter: () => entraExperiencia.timeScale(1).play(),
+      onLeaveBack: () => { entraContato.progress(0).pause(); entraExperiencia.timeScale(1.6).reverse(); },
     });
     ScrollTrigger.create({
       trigger: "[data-contato]", start: "top 10%",
-      onEnter: () => { entraCozinha.progress(1).pause(); entraContato.timeScale(1).play(); },
+      onEnter: () => { entraExperiencia.progress(1).pause(); entraContato.timeScale(1).play(); },
       onLeaveBack: () => entraContato.timeScale(1.6).reverse(),
     });
 
@@ -229,16 +243,9 @@ const CONFIG = {
     return () => doc.classList.remove("cenas-ativas");
   });
 
-  // Telas menores: as seções rolam e revelam o conteúdo ao entrar
+  // Telas menores: experiência e contato rolam e revelam o conteúdo ao entrar
   mm.add(`not all and ${palco}`, () => {
-    revelaPorRolagem(".cozinha [data-revela], .contato [data-revela]");
-    fotos.forEach((foto, i) => {
-      gsap.timeline({ scrollTrigger: { trigger: foto, start: "top 88%", once: true }, delay: i * 0.08 }).add(abreFoto(foto));
-    });
-    gsap.from(".cardapio__fio", {
-      scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
-      scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
-    });
+    revelaPorRolagem(".experiencia [data-revela], .contato [data-revela]");
   });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());
@@ -305,7 +312,7 @@ function iniciaCardapio() {
   const lista = document.querySelector("[data-selecao-lista]");
   const vazio = document.querySelector("[data-selecao-vazio]");
   const total = document.querySelector("[data-selecao-total]");
-  if (!abas || !grade) return () => [];
+  if (!abas || !grade) return { pratosEscolhidos: () => [], abreCardapio: () => {} };
 
   const check = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const fotoHtml = (p) => p.foto
@@ -400,8 +407,7 @@ function iniciaCardapio() {
   const corpo = document.querySelector("[data-escolha-corpo]");
   const conta = document.querySelector("[data-escolha-conta]");
   const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  botao.addEventListener("click", () => {
-    const abrir = botao.getAttribute("aria-expanded") !== "true";
+  const alterna = (abrir) => {
     botao.setAttribute("aria-expanded", String(abrir));
     corpo.classList.toggle("is-aberto", abrir);
     corpo.inert = !abrir;
@@ -410,7 +416,12 @@ function iniciaCardapio() {
       void grade.offsetWidth;
       grade.classList.add("is-trocando");
     }
-  });
+  };
+  botao.addEventListener("click", () => alterna(botao.getAttribute("aria-expanded") !== "true"));
+  const abreCardapio = () => {
+    if (botao.getAttribute("aria-expanded") !== "true") alterna(true);
+    botao.focus({ preventScroll: true });
+  };
   corpo.addEventListener("transitionend", (e) => {
     if (e.target === corpo && window.ScrollTrigger) window.ScrollTrigger.refresh();
   });
@@ -421,16 +432,17 @@ function iniciaCardapio() {
   });
 
   // linhas da mensagem, agrupadas por categoria
-  return () => CONFIG.cardapio
+  const pratosEscolhidos = () => CONFIG.cardapio
     .map((cat, k) => [cat.categoria, marcados().filter((c) => Number(c.dataset.cat) === k).map((c) => c.value)])
     .filter(([, nomes]) => nomes.length)
     .map(([categoria, nomes]) => `• ${categoria}: ${nomes.join(", ")}`);
+  return { pratosEscolhidos, abreCardapio };
 }
 
 function iniciaPedido() {
   const form = document.querySelector("[data-pedido]");
-  if (!form) return;
-  const pratosEscolhidos = iniciaCardapio();
+  if (!form) return () => {};
+  const { pratosEscolhidos, abreCardapio } = iniciaCardapio();
   const status = form.querySelector("[data-pedido-status]");
   const botao = form.querySelector('button[type="submit"]');
   const rotuloBotao = botao.innerHTML;
@@ -490,4 +502,5 @@ function iniciaPedido() {
     status.textContent = "Mensagem pronta no WhatsApp. É só confirmar o envio por lá.";
     setTimeout(() => { botao.disabled = false; botao.innerHTML = rotuloBotao; }, 1600);
   });
+  return abreCardapio;
 }

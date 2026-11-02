@@ -17,7 +17,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/img/salao.webp" type="image/webp">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -29,7 +29,6 @@
       <source srcset="assets/img/parede.webp" type="image/webp">
       <img class="fundo-salao__parede" src="assets/img/parede.jpg" alt="" width="1672" height="941" loading="lazy">
     </picture>
-    <img class="fundo-salao__logo" src="assets/img/logo.webp" alt="" width="760" height="253" loading="lazy">
   </div>
 
   <header class="topo" data-topo>
@@ -41,8 +40,8 @@
         </picture>
       </a>
       <nav class="topo__nav" aria-label="Principal">
-        <a href="#experiencia">A experiência</a>
         <a href="#cozinha">Nossa cozinha</a>
+        <a href="#experiencia">A experiência</a>
         <a href="#contato">Contato</a>
       </nav>
       <a class="btn btn--linha topo__cta" href="#contato">Solicitar orçamento</a>
@@ -80,7 +79,7 @@
           </div>
         </div>
 
-        <a class="abertura__rolagem" href="#experiencia" data-entra>
+        <a class="abertura__rolagem" href="#cozinha" data-entra>
           <span class="abertura__circulo" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
           </span>
@@ -93,6 +92,56 @@
 
     <div class="cenas" data-cenas>
     <div class="cenas__palco">
+    <section class="cozinha" id="cozinha" aria-labelledby="titulo-cozinha">
+      <div class="cozinha__inner">
+        <div class="cozinha__texto" data-revela>
+          <p class="rotulo">Nossa cozinha</p>
+          <h2 id="titulo-cozinha" class="titulo-2 cozinha__titulo">À altura do seu encontro.</h2>
+          <p class="texto">Sabores que acolhem. Detalhes que aproximam.</p>
+          <ul class="cardapio">
+            <li><span>Carnes assadas</span><span class="cardapio__fio" aria-hidden="true"></span><span>ao molho da casa</span></li>
+            <li><span>Gratinados</span><span class="cardapio__fio" aria-hidden="true"></span><span>servidos no réchaud</span></li>
+            <li><span>Entradas</span><span class="cardapio__fio" aria-hidden="true"></span><span>canapés e frios</span></li>
+          </ul>
+          <div class="cozinha__links">
+            <a class="link-seta" href="#contato" data-abre-cardapio>Ver o cardápio e montar o seu <span aria-hidden="true">→</span></a>
+            <a class="link-seta link-seta--leve" href="https://www.instagram.com/colunasesabores/" target="_blank" rel="noopener">Conheça nossos pratos no Instagram <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <div class="galeria">
+          <figure class="foto foto--a" data-foto>
+            <span class="foto__moldura" aria-hidden="true"></span>
+            <div class="foto__janela">
+              <picture>
+                <source srcset="assets/img/prato-carne.webp" type="image/webp">
+                <img src="assets/img/prato-carne.jpg" alt="Carne assada fatiada com molho e ramos de alecrim em travessa de porcelana" width="1024" height="768" loading="lazy">
+              </picture>
+            </div>
+            <figcaption>Carne assada ao molho, com alecrim</figcaption>
+          </figure>
+          <figure class="foto foto--b" data-foto>
+            <div class="foto__janela">
+              <picture>
+                <source srcset="assets/img/prato-gratinado.webp" type="image/webp">
+                <img src="assets/img/prato-gratinado.jpg" alt="Batatas gratinadas com queijo dourado em cuba de buffet" width="1024" height="768" loading="lazy">
+              </picture>
+            </div>
+            <figcaption>Gratinado de batatas</figcaption>
+          </figure>
+          <figure class="foto foto--c" data-foto>
+            <div class="foto__janela">
+              <picture>
+                <source srcset="assets/img/prato-entrada.webp" type="image/webp">
+                <img src="assets/img/prato-entrada.jpg" alt="Canapés de salmão defumado e tomate-cereja sobre tábua de ardósia" width="1024" height="768" loading="lazy">
+              </picture>
+            </div>
+            <figcaption>Canapés de entrada</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section class="experiencia" id="experiencia" aria-labelledby="titulo-experiencia">
       <div class="experiencia__inner">
         <header class="experiencia__cabeca" data-revela>
@@ -118,55 +167,6 @@
             <p class="tempo__texto">No dia, o buffet chega pronto para servir. Você recebe os irmãos e convidados sem se preocupar com a cozinha.</p>
           </li>
         </ol>
-      </div>
-    </section>
-
-    <section class="cozinha" id="cozinha" aria-labelledby="titulo-cozinha">
-      <div class="cozinha__inner">
-        <div class="cozinha__texto" data-revela>
-          <p class="rotulo">Nossa cozinha</p>
-          <h2 id="titulo-cozinha" class="titulo-2">À altura<br>do seu encontro.</h2>
-          <p class="texto">Sabores que acolhem. Detalhes que aproximam.</p>
-          <ul class="cardapio">
-            <li><span>Carnes assadas</span><span class="cardapio__fio" aria-hidden="true"></span><span>ao molho da casa</span></li>
-            <li><span>Gratinados</span><span class="cardapio__fio" aria-hidden="true"></span><span>servidos no réchaud</span></li>
-            <li><span>Entradas</span><span class="cardapio__fio" aria-hidden="true"></span><span>canapés e frios</span></li>
-          </ul>
-          <a class="link-seta" href="https://www.instagram.com/colunasesabores/" target="_blank" rel="noopener">Conheça nossos pratos <span aria-hidden="true">→</span></a>
-        </div>
-
-        <div class="galeria">
-          <figure class="foto foto--a" data-foto data-velocidade="-6">
-            <span class="foto__moldura" aria-hidden="true"></span>
-            <div class="foto__janela">
-              <picture>
-                <source srcset="assets/img/prato-carne.webp" type="image/webp">
-                <img src="assets/img/prato-carne.jpg" alt="Carne assada fatiada com molho e ramos de alecrim em travessa de porcelana" width="1024" height="768" loading="lazy">
-              </picture>
-            </div>
-            <figcaption>Carne assada ao molho, com alecrim</figcaption>
-          </figure>
-          <figure class="foto foto--b" data-foto data-velocidade="8">
-            <span class="foto__moldura" aria-hidden="true"></span>
-            <div class="foto__janela">
-              <picture>
-                <source srcset="assets/img/prato-gratinado.webp" type="image/webp">
-                <img src="assets/img/prato-gratinado.jpg" alt="Batatas gratinadas com queijo dourado em cuba de buffet" width="1024" height="768" loading="lazy">
-              </picture>
-            </div>
-            <figcaption>Gratinado de batatas</figcaption>
-          </figure>
-          <figure class="foto foto--c" data-foto data-velocidade="-3">
-            <span class="foto__moldura" aria-hidden="true"></span>
-            <div class="foto__janela">
-              <picture>
-                <source srcset="assets/img/prato-entrada.webp" type="image/webp">
-                <img src="assets/img/prato-entrada.jpg" alt="Canapés de salmão defumado e tomate-cereja sobre tábua de ardósia" width="1024" height="768" loading="lazy">
-              </picture>
-            </div>
-            <figcaption>Canapés de entrada</figcaption>
-          </figure>
-        </div>
       </div>
     </section>
     </div>
@@ -250,7 +250,8 @@
       <span class="guardanapo__baixo" aria-hidden="true"></span>
       <span class="guardanapo__tecido" aria-hidden="true"></span>
       <svg class="guardanapo__costura" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <polygon points="50,7 97,96.5 3,96.5" />
+        <polygon class="costura--larga" points="48.73,7.52 49.04,6.96 49.36,6.56 49.68,6.33 50.00,6.25 50.32,6.33 50.64,6.56 50.96,6.96 51.27,7.52 55.73,15.95 60.17,24.45 64.59,33.02 69.00,41.67 73.39,50.39 77.75,59.18 82.11,68.04 86.44,76.98 90.75,85.99 95.05,95.08 95.18,95.38 95.24,95.62 95.22,95.79 95.13,95.89 94.96,95.93 5.04,95.93 4.87,95.89 4.78,95.79 4.76,95.62 4.82,95.38 4.95,95.08 9.25,85.99 13.56,76.98 17.89,68.04 22.25,59.18 26.61,50.39 31.00,41.67 35.41,33.02 39.83,24.45 44.27,15.95" />
+        <polygon class="costura--estreita" points="48.08,11.34 48.56,10.50 49.04,9.90 49.52,9.54 50.00,9.42 50.48,9.54 50.96,9.90 51.44,10.50 51.92,11.34 56.32,19.41 60.67,27.53 64.96,35.71 69.20,43.94 73.38,52.22 77.51,60.56 81.58,68.95 85.60,77.39 89.56,85.89 93.47,94.44 93.65,94.90 93.70,95.26 93.60,95.52 93.37,95.67 92.99,95.72 7.01,95.72 6.63,95.67 6.40,95.52 6.30,95.26 6.35,94.90 6.53,94.44 10.44,85.89 14.40,77.39 18.42,68.95 22.49,60.56 26.62,52.22 30.80,43.94 35.04,35.71 39.33,27.53 43.68,19.41" />
       </svg>
       <div class="guardanapo__conteudo">
         <picture>
