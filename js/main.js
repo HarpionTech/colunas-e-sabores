@@ -69,7 +69,7 @@ const CONFIG = {
   const destino = (id, alvo) => {
     const topoDe = (el) => el.getBoundingClientRect().top + window.scrollY;
     if (doc.classList.contains("cenas-ativas")) {
-      if (id === "#cozinha") return topoDe(document.querySelector("[data-cenas]")) + window.innerHeight * 0.75;
+      if (id === "#cozinha") return topoDe(document.querySelector("[data-cenas]")) + window.innerHeight * 0.45;
       if (id === "#contato") return topoDe(alvo) + window.innerHeight * 0.05;
     }
     return id === "#contato" ? topoDe(alvo) : topoDe(alvo) - topoAltura() + 1;
@@ -205,7 +205,7 @@ const CONFIG = {
       .from(".prato:not([hidden])", { autoAlpha: 0, y: 26, duration: 0.7, stagger: 0.07 }, 0.85);
 
     ScrollTrigger.create({
-      trigger: "[data-cenas]", start: "top top-=40%",
+      trigger: "[data-cenas]", start: "top top-=25%",
       onEnter: () => entraCozinha.timeScale(1).play(), onLeaveBack: () => entraCozinha.timeScale(1.6).reverse(),
     });
     ScrollTrigger.create({
