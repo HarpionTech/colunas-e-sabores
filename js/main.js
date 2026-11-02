@@ -110,6 +110,22 @@ const CONFIG = {
 
   const abreCardapio = iniciaPedido();
 
+  // Vídeos da cozinha: sem som, em loop, tocando só enquanto aparecem na tela
+  const videos = [...document.querySelectorAll("[data-video]")];
+  if (!reduz && "IntersectionObserver" in window) {
+    const observa = new IntersectionObserver((entradas) => {
+      entradas.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) {
+          target.preload = "auto";
+          target.play().catch(() => {});
+        } else {
+          target.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    videos.forEach((v) => observa.observe(v));
+  }
+
   if (!animar) return;
 
   gsap.registerPlugin(ScrollTrigger);
@@ -175,7 +191,7 @@ const CONFIG = {
   const abreFoto = (foto) => {
     const tl = gsap.timeline()
       .fromTo(foto.querySelector(".foto__janela"), { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
-      .from(foto.querySelector(".foto__janela img"), { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
+      .from(foto.querySelector(".foto__janela img, .foto__video"), { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
       .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
     const moldura = foto.querySelector(".foto__moldura");
     if (moldura) tl.from(moldura, { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35);

@@ -88,11 +88,11 @@ em { font-style: italic; }
 }
 .link-seta span { display: inline-block; transition: transform 260ms var(--ease-out); color: var(--ouro); }
 .link-seta span svg { display: block; }
-.link-seta--insta span { color: var(--ouro-claro); }
+.link-seta--insta span, .link-seta--icone span { color: var(--ouro-claro); }
 @media (hover: hover) {
   .link-seta:hover { color: var(--ouro-claro); background-size: 40% 1px; }
   .link-seta:hover span { transform: translate(3px, -3px); }
-  .link-seta--insta:hover span { transform: scale(1.08); }
+  .link-seta--insta:hover span, .link-seta--icone:hover span { transform: scale(1.08); }
 }
 
 .rotulo {
@@ -316,22 +316,22 @@ em { font-style: italic; }
 .cardapio li span:last-child { color: var(--marfim-2); font-size: 0.95rem; }
 .cardapio__fio { flex: 1; border-bottom: 1px dotted rgb(214 170 85 / 0.5); transform: translateY(-4px); }
 
-/* Galeria: a foto principal ocupa a altura das duas secundárias; nada se sobrepõe */
+/* Galeria: os dois vídeos verticais lado a lado, o segundo um pouco mais abaixo; nada se sobrepõe */
 .galeria {
-  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-  gap: 18px 20px; isolation: isolate;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start;
+  gap: 18px 22px; isolation: isolate;
 }
 .foto { position: relative; margin: 0; }
-.foto--a { grid-row: 1 / span 2; display: flex; flex-direction: column; }
-.foto--a .foto__janela { flex: 1; aspect-ratio: auto; min-height: 260px; }
-.foto--a .foto__janela img { position: absolute; inset: 0; }
+.foto--b { margin-top: 56px; }
+.foto--a .foto__janela, .foto--b .foto__janela { aspect-ratio: 3 / 4; }
+.foto__janela img, .foto__video { position: absolute; inset: 0; }
 .foto__janela {
   position: relative; z-index: 2; overflow: hidden; aspect-ratio: 4 / 3;
   border: 1px solid rgb(214 170 85 / 0.7);
   box-shadow: 0 24px 50px -22px rgb(0 0 0 / 0.85);
   background: #0c0b08;
 }
-.foto__janela img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+.foto__janela img, .foto__video { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
 .foto__moldura {
   position: absolute; inset: 0 0 auto; z-index: 1; height: calc(100% - 34px);
   border: 1px solid rgb(214 170 85 / 0.4);
@@ -360,7 +360,7 @@ em { font-style: italic; }
 .cenas-ativas .tempos { margin-top: clamp(40px, 6vh, 72px); }
 .cenas-ativas .cozinha { position: absolute; inset: 0; display: grid; align-items: center; pointer-events: auto; }
 .cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 32px; }
-.cenas-ativas .galeria { width: 100%; max-width: calc((100svh - var(--topo-h) - var(--cornija-h) - 110px) * 1.45); justify-self: end; }
+.cenas-ativas .galeria { width: 100%; max-width: calc((100svh - var(--topo-h) - var(--cornija-h) - 200px) * 1.45); justify-self: end; }
 .cenas-ativas .contato { z-index: 3; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
 .cenas-ativas .contato__inner { position: sticky; top: 0; pointer-events: auto; padding-top: calc(var(--topo-h) + var(--cornija-h) + 40px); }
 .cenas-ativas .contato__espaco { display: block; height: 10vh; height: 10svh; }
@@ -634,8 +634,7 @@ em { font-style: italic; }
   .abertura__acoes { flex-direction: column; gap: 18px; }
   .abertura__titulo { font-size: 2.2rem; }
   .galeria { grid-template-columns: 1fr 1fr; gap: 16px 12px; }
-  .foto--a { grid-row: auto; grid-column: 1 / -1; }
-  .foto--a .foto__janela { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+  .foto--b { margin-top: 32px; }
   .foto__moldura { display: none; }
   .pedido__linha { grid-template-columns: 1fr; }
   .escolha__grade { gap: 10px; }
