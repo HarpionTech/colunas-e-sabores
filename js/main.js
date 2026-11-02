@@ -65,6 +65,16 @@ const CONFIG = {
     gsap.ticker.lagSmoothing(0);
   }
 
+  // No palco de cenas, cozinha e contato só aparecem depois do gatilho: a âncora vai um pouco além do topo
+  const destino = (id, alvo) => {
+    const topoDe = (el) => el.getBoundingClientRect().top + window.scrollY;
+    if (doc.classList.contains("cenas-ativas")) {
+      if (id === "#cozinha") return topoDe(document.querySelector("[data-cenas]")) + window.innerHeight * 0.75;
+      if (id === "#contato") return topoDe(alvo) + window.innerHeight * 0.05;
+    }
+    return id === "#contato" ? topoDe(alvo) : topoDe(alvo) - topoAltura() + 1;
+  };
+
   // Âncoras: rolagem suave com Lenis; foco no primeiro campo ao chegar no contato
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
@@ -74,11 +84,11 @@ const CONFIG = {
       if (!alvo) return;
       e.preventDefault();
       const focar = () => {
-        if (id === "#contato") document.getElementById("tipo").focus({ preventScroll: true });
+        if (id === "#contato") setTimeout(() => document.getElementById("tipo").focus({ preventScroll: true }), 900);
         else if (id === "#conteudo") alvo.setAttribute("tabindex", "-1"), alvo.focus({ preventScroll: true });
       };
       if (lenis) {
-        lenis.scrollTo(id === "#inicio" ? 0 : alvo, { offset: id === "#contato" ? 0 : -topoAltura() + 1, duration: 1.6, onComplete: focar });
+        lenis.scrollTo(id === "#inicio" ? 0 : destino(id, alvo), { duration: 1.6, onComplete: focar });
       } else {
         alvo.scrollIntoView({ behavior: reduz ? "auto" : "smooth" });
         focar();
@@ -155,45 +165,87 @@ const CONFIG = {
 
   iniciaPoeira(document.querySelector("[data-poeira]"));
 
-  // Revelações de seção: uma vez só
-  gsap.set("[data-revela]", { opacity: 0, y: 40 });
-  ScrollTrigger.batch("[data-revela]", {
-    start: "top 86%",
-    once: true,
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.1, overwrite: true }),
+  // A experiência rola normalmente e revela seus blocos uma vez só
+  const revelaPorRolagem = (sel) => {
+    gsap.set(sel, { opacity: 0, y: 40 });
+    ScrollTrigger.batch(sel, {
+      start: "top 86%",
+      once: true,
+      onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.1, overwrite: true }),
+    });
+  };
+  revelaPorRolagem(".experiencia [data-revela]");
+
+  // Foto: a janela abre de baixo para cima e a moldura se desloca para o lugar
+  const fotos = [...document.querySelectorAll("[data-foto]")];
+  const abreFoto = (foto) => gsap.timeline()
+    .fromTo(foto.querySelector(".foto__janela"), { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
+    .from(foto.querySelector(".foto__janela img"), { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
+    .from(foto.querySelector(".foto__moldura"), { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35)
+    .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
+
+  const palco = "(min-width: 1100px) and (min-height: 680px)";
+  const mm = gsap.matchMedia();
+
+  // Desktop: cozinha e contato são cenas que entram no lugar, disparadas pela rolagem
+  mm.add(palco, () => {
+    doc.classList.add("cenas-ativas");
+    const cozinha = document.querySelector(".cozinha");
+    const contato = document.querySelector(".contato__inner");
+
+    const entraCozinha = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
+      .to(".experiencia__inner", { autoAlpha: 0, y: -60, duration: 0.6, ease: "power2.in" }, 0)
+      .fromTo(cozinha, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.3)
+      .from(".cozinha__texto > *", { autoAlpha: 0, y: 46, duration: 1, stagger: 0.08 }, 0.35)
+      .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.75);
+    fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.45 + i * 0.14));
+
+    const entraContato = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
+      .to(cozinha, { autoAlpha: 0, y: -50, scale: 0.97, duration: 0.6, ease: "power2.in" }, 0)
+      .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.3)
+      .from(".contato__chamada > *", { autoAlpha: 0, y: 40, duration: 0.9, stagger: 0.08 }, 0.35)
+      .from(".escolha", { autoAlpha: 0, y: 50, duration: 1 }, 0.5)
+      .from(".pedido", { autoAlpha: 0, x: 60, duration: 1 }, 0.6)
+      .from(".prato:not([hidden])", { autoAlpha: 0, y: 26, duration: 0.7, stagger: 0.07 }, 0.75);
+
+    ScrollTrigger.create({
+      trigger: "[data-cenas]", start: "top top-=40%",
+      onEnter: () => entraCozinha.timeScale(1).play(), onLeaveBack: () => entraCozinha.timeScale(1.6).reverse(),
+    });
+    ScrollTrigger.create({
+      trigger: "[data-contato]", start: "top 10%",
+      onEnter: () => entraContato.timeScale(1).play(), onLeaveBack: () => entraContato.timeScale(1.6).reverse(),
+    });
+
+    fotos.forEach((foto) => {
+      gsap.to(foto, {
+        yPercent: (Number(foto.dataset.velocidade) || 0) * 0.6, ease: "none",
+        scrollTrigger: { trigger: "[data-cenas]", start: "top top", end: "bottom bottom", scrub: true },
+      });
+    });
+
+    ScrollTrigger.refresh();
+    return () => doc.classList.remove("cenas-ativas");
   });
 
-  gsap.from(".cardapio__fio", {
-    scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
-    scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
-  });
-
-  // Fotos: a janela abre de baixo para cima e a moldura se desloca para o lugar
-  document.querySelectorAll("[data-foto]").forEach((foto, i) => {
-    const janela = foto.querySelector(".foto__janela");
-    const img = janela.querySelector("img");
-    const moldura = foto.querySelector(".foto__moldura");
-    const tl = gsap.timeline({ scrollTrigger: { trigger: foto, start: "top 88%", once: true }, delay: i * 0.08 });
-    tl.fromTo(janela, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
-      .from(img, { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
-      .from(moldura, { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35)
-      .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
-  });
-
-  ScrollTrigger.matchMedia({
-    "(min-width: 641px)": () => {
-      document.querySelectorAll("[data-foto]").forEach((foto) => {
+  // Telas menores: as seções rolam e revelam o conteúdo ao entrar
+  mm.add(`not all and ${palco}`, () => {
+    revelaPorRolagem(".cozinha [data-revela], .contato [data-revela]");
+    fotos.forEach((foto, i) => {
+      gsap.timeline({ scrollTrigger: { trigger: foto, start: "top 88%", once: true }, delay: i * 0.08 }).add(abreFoto(foto));
+    });
+    gsap.from(".cardapio__fio", {
+      scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
+      scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
+    });
+    if (window.innerWidth > 640) {
+      fotos.forEach((foto) => {
         gsap.to(foto, {
           yPercent: Number(foto.dataset.velocidade) || 0, ease: "none",
           scrollTrigger: { trigger: ".galeria", start: "top bottom", end: "bottom top", scrub: true },
         });
       });
-    },
-  });
-
-  gsap.fromTo(".contato__fundo img", { scale: 1.12 }, {
-    scale: 1, ease: "none",
-    scrollTrigger: { trigger: ".contato", start: "top bottom", end: "bottom bottom", scrub: true },
+    }
   });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());

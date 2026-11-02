@@ -24,6 +24,14 @@
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 
+  <div class="fundo-salao" aria-hidden="true">
+    <picture>
+      <source srcset="assets/img/parede.webp" type="image/webp">
+      <img class="fundo-salao__parede" src="assets/img/parede.jpg" alt="" width="1672" height="941" loading="lazy">
+    </picture>
+    <img class="fundo-salao__logo" src="assets/img/logo.webp" alt="" width="760" height="253" loading="lazy">
+  </div>
+
   <header class="topo" data-topo>
     <div class="topo__inner">
       <a class="topo__logo" href="#inicio" aria-label="Colunas &amp; Sabores Buffet, início">
@@ -82,7 +90,10 @@
     </section>
 
     <section class="experiencia" id="experiencia" aria-labelledby="titulo-experiencia">
-      <div class="pavimento" aria-hidden="true"></div>
+      <picture class="cornija" aria-hidden="true">
+        <source srcset="assets/img/cornija.webp" type="image/webp">
+        <img src="assets/img/cornija.png" alt="" width="1920" height="159">
+      </picture>
       <div class="experiencia__inner">
         <header class="experiencia__cabeca" data-revela>
           <p class="rotulo">A experiência</p>
@@ -110,6 +121,8 @@
       </div>
     </section>
 
+    <div class="cenas" data-cenas>
+    <div class="cenas__palco">
     <section class="cozinha" id="cozinha" aria-labelledby="titulo-cozinha">
       <div class="cozinha__inner">
         <div class="cozinha__texto" data-revela>
@@ -158,14 +171,10 @@
         </div>
       </div>
     </section>
+    </div>
+    </div>
 
-    <section class="contato" id="contato" aria-labelledby="titulo-contato">
-      <div class="contato__fundo" aria-hidden="true">
-        <picture>
-          <source srcset="assets/img/mesa.webp" type="image/webp">
-          <img src="assets/img/mesa.jpg" alt="" width="1448" height="800" loading="lazy">
-        </picture>
-      </div>
+    <section class="contato" id="contato" aria-labelledby="titulo-contato" data-contato>
       <div class="contato__inner contato__inner--cardapio">
         <div class="contato__chamada" data-revela>
           <p class="rotulo">Contato</p>
@@ -222,6 +231,7 @@
           <p class="pedido__nota" aria-live="polite" data-pedido-status>Abre o WhatsApp com a mensagem preenchida. Nada é enviado sem você confirmar.</p>
         </form>
       </div>
+      <div class="contato__espaco" aria-hidden="true"></div>
     </section>
   </main>
 
