@@ -351,10 +351,12 @@ em { font-style: italic; }
 @media (min-width: 1100px) {
   :root { --conteudo: min(1160px, 64vw); }
 }
-.cenas-ativas .experiencia { z-index: 1; }
-.cenas-ativas .cenas { position: relative; z-index: 2; height: 150vh; height: 150svh; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
+.cenas-ativas .cenas { position: relative; height: 150vh; height: 150svh; pointer-events: none; }
 .cenas-ativas .cenas__palco { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.cenas-ativas .experiencia, .cenas-ativas .contato { overflow-x: clip; }
+.cenas-ativas .contato { overflow-x: clip; }
+.cenas-ativas .experiencia { position: absolute; inset: 0; display: grid; align-items: center; background: none; pointer-events: auto; }
+.cenas-ativas .experiencia__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 24px; }
+.cenas-ativas .tempos { margin-top: clamp(40px, 6vh, 72px); }
 .cenas-ativas .cozinha { position: absolute; inset: 0; display: grid; align-items: center; pointer-events: auto; }
 .cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 32px; }
 .cenas-ativas .galeria { width: min(100%, calc((100svh - var(--topo-h) - var(--cornija-h) - 120px) * 7 / 7.4)); justify-self: end; }

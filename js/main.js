@@ -69,7 +69,9 @@ const CONFIG = {
   const destino = (id, alvo) => {
     const topoDe = (el) => el.getBoundingClientRect().top + window.scrollY;
     if (doc.classList.contains("cenas-ativas")) {
-      if (id === "#cozinha") return topoDe(document.querySelector("[data-cenas]")) + window.innerHeight * 0.3;
+      const cenas = topoDe(document.querySelector("[data-cenas]"));
+      if (id === "#experiencia") return cenas + 1;
+      if (id === "#cozinha") return cenas + window.innerHeight * 0.3;
       if (id === "#contato") return topoDe(alvo) + window.innerHeight * 0.05;
     }
     return id === "#contato" ? topoDe(alvo) : topoDe(alvo) - topoAltura() + 1;
@@ -196,9 +198,10 @@ const CONFIG = {
       .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.9);
     fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.6 + i * 0.14));
 
+    // fromTo com valores fixos: a saída não pode herdar a posição de uma entrada ainda em andamento
     const entraContato = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(".cozinha__inner", { x: sai, duration: 0.9, ease: "power2.inOut" }, 0)
-      .to(cozinha, { autoAlpha: 0, duration: 0.4, ease: "power1.in" }, 0.5)
+      .fromTo(".cozinha__inner", { x: 0 }, { x: sai, duration: 0.9, ease: "power2.inOut", immediateRender: false }, 0)
+      .fromTo(cozinha, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.4, ease: "power1.in", immediateRender: false }, 0.5)
       .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
       .fromTo(contato, { x: entra }, { x: 0, duration: 1.3 }, 0.15)
       .from(".contato__chamada > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
@@ -207,11 +210,13 @@ const CONFIG = {
 
     ScrollTrigger.create({
       trigger: "[data-cenas]", start: "top top-=20%",
-      onEnter: () => entraCozinha.timeScale(1).play(), onLeaveBack: () => entraCozinha.timeScale(1.6).reverse(),
+      onEnter: () => entraCozinha.timeScale(1).play(),
+      onLeaveBack: () => { entraContato.progress(0).pause(); entraCozinha.timeScale(1.6).reverse(); },
     });
     ScrollTrigger.create({
       trigger: "[data-contato]", start: "top 10%",
-      onEnter: () => entraContato.timeScale(1).play(), onLeaveBack: () => entraContato.timeScale(1.6).reverse(),
+      onEnter: () => { entraCozinha.progress(1).pause(); entraContato.timeScale(1).play(); },
+      onLeaveBack: () => entraContato.timeScale(1.6).reverse(),
     });
 
     ScrollTrigger.refresh();
