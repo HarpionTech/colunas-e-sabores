@@ -281,6 +281,34 @@ em { font-style: italic; }
   display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: clamp(40px, 6vw, 96px);
 }
 .experiencia__cabeca .rotulo { grid-column: 1 / -1; }
+/* Foto do cozinheiro: em pé, na lateral direita, ao lado do texto e das três etapas */
+.experiencia__inner {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr);
+  grid-template-areas: "cabeca foto" "tempos foto"; column-gap: clamp(36px, 5vw, 72px); align-items: start;
+}
+.experiencia__inner .experiencia__cabeca { grid-area: cabeca; grid-template-columns: 1fr; }
+.experiencia__inner .tempos { grid-area: tempos; }
+.experiencia__foto { grid-area: foto; position: relative; margin: 0; align-self: center; isolation: isolate; }
+.experiencia__foto::before {
+  content: ""; position: absolute; inset: 0 0 34px; z-index: -1;
+  border: 1px solid rgb(214 170 85 / 0.4); transform: translate(14px, -14px);
+}
+.experiencia__janela {
+  position: relative; overflow: hidden; aspect-ratio: 3 / 4;
+  border: 1px solid rgb(214 170 85 / 0.7);
+  box-shadow: 0 24px 50px -22px rgb(0 0 0 / 0.85);
+  background: #0c0b08;
+}
+.experiencia__janela img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.experiencia__janela::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(85% 75% at 45% 50%, transparent 55%, rgb(20 12 6 / 0.45) 100%);
+}
+.experiencia__foto figcaption {
+  display: flex; align-items: center; gap: 10px; margin-top: 10px;
+  color: var(--marfim-2); font-size: 0.85rem; letter-spacing: 0.04em;
+}
+.experiencia__foto figcaption::before { content: ""; width: 18px; height: 1px; background: var(--ouro); flex: none; }
 .experiencia__cabeca .texto { margin-bottom: 0.6em; }
 .tempos {
   list-style: none; margin: clamp(64px, 9vw, 112px) 0 0; padding: 0;
@@ -620,6 +648,9 @@ em { font-style: italic; }
   .galeria { max-width: 640px; width: 100%; margin: 0 auto; }
   .tempos { grid-template-columns: 1fr; gap: 40px; }
   .experiencia__cabeca { grid-template-columns: 1fr; }
+  .experiencia__inner { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabeca" "foto" "tempos"; }
+  .experiencia__foto { width: min(100%, 380px); justify-self: center; margin-top: 40px; }
+  .experiencia__foto::before { transform: translate(10px, -10px); }
   .contato__inner--cardapio { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "chamada" "escolha" "pedido"; }
   .contato__inner--cardapio .pedido { position: static; }
 }

@@ -232,6 +232,7 @@ const CONFIG = {
       .fromTo(experiencia, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
       .fromTo(".experiencia__inner", { x: entra }, { x: 0, duration: 1.3 }, 0.15)
       .from(".experiencia__cabeca > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
+      .from(".experiencia__foto", { autoAlpha: 0, x: 60, duration: 1.1 }, 0.55)
       .from(".tempo", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.1 }, 0.7);
 
     // fromTo com valores fixos: a saída não pode herdar a posição de uma entrada ainda em andamento
