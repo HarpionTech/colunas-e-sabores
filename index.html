@@ -182,19 +182,31 @@
         </div>
 
         <div class="escolha" data-revela>
-          <div class="escolha__topo">
-            <h3 class="escolha__titulo">Monte seu cardápio</h3>
-            <p class="escolha__dica">Escolha quantos quiser. Nenhum prato é obrigatório.</p>
+          <h3 class="escolha__cabeca">
+            <button class="escolha__botao" type="button" aria-expanded="false" aria-controls="escolha-corpo" data-escolha-botao>
+              <span class="escolha__textos">
+                <span class="escolha__titulo">Monte seu cardápio</span>
+                <span class="escolha__dica">Veja os pratos e marque os que combinam com o seu encontro. É opcional.</span>
+              </span>
+              <span class="escolha__conta" data-escolha-conta hidden>0</span>
+              <span class="escolha__seta" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            </button>
+          </h3>
+          <div class="escolha__corpo" id="escolha-corpo" data-escolha-corpo inert>
+            <div class="escolha__dentro">
+              <div class="escolha__miolo">
+                <div class="abas" role="tablist" aria-label="Categorias do cardápio" data-abas></div>
+                <div class="escolha__grade" role="tabpanel" data-pratos aria-live="off"></div>
+              </div>
+            </div>
           </div>
-          <div class="abas" role="tablist" aria-label="Categorias do cardápio" data-abas></div>
-          <div class="escolha__grade" role="tabpanel" data-pratos aria-live="off"></div>
           <noscript><p class="escolha__dica">Ative o JavaScript para montar o cardápio, ou fale com a gente pelo Instagram.</p></noscript>
         </div>
 
         <form class="pedido" data-pedido novalidate data-revela>
           <div class="selecao" data-selecao>
             <p class="selecao__titulo">Seu cardápio <span class="selecao__total" data-selecao-total>0 pratos</span></p>
-            <p class="selecao__vazio" data-selecao-vazio>Nenhum prato marcado ainda. Você pode escolher ao lado ou deixar para a conversa.</p>
+            <p class="selecao__vazio" data-selecao-vazio>Nenhum prato marcado ainda. Abra "Monte seu cardápio" para escolher, ou deixe para a conversa.</p>
             <ul class="selecao__lista" data-selecao-lista></ul>
           </div>
           <div class="campo">

@@ -6,7 +6,7 @@
   --ouro-claro: #e8c77f;
   --ouro-escuro: #a9823a;
   --marfim: #f3ebdd;
-  --marfim-2: #cfc4b2;
+  --marfim-2: #e2d8c7;
   --erro: #f0a089;
 
   --fonte-titulos: "EB Garamond", Georgia, "Times New Roman", serif;
@@ -106,7 +106,7 @@ em { font-style: italic; }
   text-wrap: balance;
 }
 .titulo-2 em { color: var(--ouro-claro); font-weight: 400; }
-.texto { margin-top: 22px; max-width: 54ch; color: var(--marfim-2); font-size: 1.06rem; }
+.texto { margin-top: 22px; max-width: 54ch; color: var(--marfim-2); font-size: 1.08rem; font-weight: 500; text-shadow: 0 1px 2px rgb(0 0 0 / 0.6); }
 
 /* Cabeçalho */
 .topo {
@@ -253,7 +253,7 @@ em { font-style: italic; }
   position: absolute; left: 50%; top: 50%; z-index: 1;
   width: min(46vw, 640px); height: auto;
   transform: translate(-50%, -50%);
-  opacity: 0.07; filter: saturate(0.6);
+  opacity: 0.03; filter: saturate(0.5);
 }
 
 /* Cornija: sai da abertura e trava logo abaixo do cabeçalho */
@@ -295,7 +295,7 @@ em { font-style: italic; }
   font: italic 400 clamp(3rem, 5vw, 4.4rem)/0.9 var(--fonte-titulos);
 }
 .tempo__titulo { margin-top: 18px; font-size: clamp(1.6rem, 2.4vw, 2rem); }
-.tempo__texto { margin-top: 12px; color: var(--marfim-2); max-width: 36ch; }
+.tempo__texto { margin-top: 12px; color: var(--marfim-2); max-width: 36ch; font-weight: 500; text-shadow: 0 1px 2px rgb(0 0 0 / 0.6); }
 
 /* Nossa cozinha */
 .cozinha { position: relative; }
@@ -313,11 +313,15 @@ em { font-style: italic; }
 .cardapio li span:last-child { color: var(--marfim-2); font: italic 1.05rem var(--fonte-titulos); }
 .cardapio__fio { flex: 1; border-bottom: 1px dotted rgb(214 170 85 / 0.5); transform: translateY(-4px); }
 
-.galeria { position: relative; aspect-ratio: 7 / 7.4; }
+/* Sem stacking context nas .foto: molduras ficam atrás de todas as fotos e as legendas acima de todas as linhas */
+.galeria { position: relative; aspect-ratio: 7 / 7.4; isolation: isolate; }
 .foto { position: absolute; margin: 0; }
-.foto--a { left: 0; top: 0; width: 64%; z-index: 1; }
-.foto--b { right: 0; top: 36%; width: 58%; z-index: 2; }
-.foto--c { left: 2%; bottom: 0; width: 38%; z-index: 3; }
+.foto--a { left: 0; top: 0; width: 64%; }
+.foto--b { right: 0; top: 36%; width: 58%; }
+.foto--c { left: 2%; bottom: 0; width: 38%; }
+.foto--a .foto__janela { z-index: 2; }
+.foto--b .foto__janela { z-index: 3; }
+.foto--c .foto__janela { z-index: 4; }
 .foto__janela {
   position: relative; overflow: hidden; aspect-ratio: 4 / 3;
   border: 1px solid rgb(214 170 85 / 0.75);
@@ -326,16 +330,18 @@ em { font-style: italic; }
 }
 .foto__janela img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
 .foto__moldura {
-  position: absolute; inset: 0; z-index: -1;
+  position: absolute; inset: 0; z-index: 1;
   border: 1px solid rgb(214 170 85 / 0.45);
   transform: translate(22px, 22px);
 }
 .foto--b .foto__moldura { transform: translate(-22px, -22px); }
 .foto figcaption {
-  margin-top: 36px; padding-left: 2px; color: var(--marfim-2);
-  font: italic 1rem var(--fonte-titulos);
+  position: relative; z-index: 5;
+  width: fit-content; margin-top: 10px; padding: 4px 12px;
+  background: rgb(14 12 9 / 0.94); border-radius: 2px;
+  color: var(--marfim); font: italic 500 1.02rem var(--fonte-titulos);
 }
-.foto--b figcaption { margin-top: 12px; text-align: right; }
+.foto--b figcaption { margin-left: auto; }
 
 /* Contato */
 .contato { position: relative; }
@@ -347,7 +353,8 @@ em { font-style: italic; }
 }
 .cenas-ativas .experiencia { z-index: 1; }
 .cenas-ativas .cenas { position: relative; z-index: 2; height: 150vh; height: 150svh; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
-.cenas-ativas .cenas__palco { position: sticky; top: 0; height: 100vh; height: 100svh; }
+.cenas-ativas .cenas__palco { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.cenas-ativas .experiencia, .cenas-ativas .contato { overflow-x: clip; }
 .cenas-ativas .cozinha { position: absolute; inset: 0; display: grid; align-items: center; pointer-events: auto; }
 .cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 32px; }
 .cenas-ativas .galeria { width: min(100%, calc((100svh - var(--topo-h) - var(--cornija-h) - 120px) * 7 / 7.4)); justify-self: end; }
@@ -363,7 +370,7 @@ em { font-style: italic; }
 }
 .contato__inner--cardapio {
   grid-template-columns: minmax(0, 7fr) minmax(0, 4.6fr);
-  grid-template-areas: "chamada chamada" "escolha pedido";
+  grid-template-areas: "chamada pedido" "escolha pedido"; grid-template-rows: auto 1fr;
   align-items: start; row-gap: clamp(48px, 6vw, 72px);
 }
 .contato__inner--cardapio .contato__chamada { grid-area: chamada; max-width: 760px; }
@@ -372,9 +379,45 @@ em { font-style: italic; }
 .contato__chamada .titulo-2 { font-size: clamp(2.4rem, 4.8vw, 4rem); }
 
 /* Cardápio para escolher */
-.escolha__topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
-.escolha__titulo { font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
-.escolha__dica { color: var(--marfim-2); font-size: 0.95rem; }
+.escolha__cabeca { margin: 0; font: inherit; }
+.escolha__botao {
+  display: flex; align-items: center; gap: 16px; width: 100%;
+  padding: 20px 22px; text-align: left; cursor: pointer;
+  background: rgb(14 13 10 / 0.78); color: var(--marfim);
+  border: 1px solid rgb(214 170 85 / 0.45); border-radius: 4px;
+  transition: border-color 220ms var(--ease-out), background-color 220ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.escolha__botao:active { transform: scale(0.99); }
+@media (hover: hover) { .escolha__botao:hover { border-color: var(--ouro); background: rgb(24 20 14 / 0.88); } }
+.escolha__botao[aria-expanded="true"] { border-color: var(--ouro); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.escolha__textos { display: grid; gap: 4px; flex: 1; }
+.escolha__titulo { font: 500 clamp(1.5rem, 2.3vw, 1.9rem)/1.15 var(--fonte-titulos); }
+.escolha__dica { color: var(--marfim-2); font-size: 0.95rem; font-weight: 500; }
+.escolha__conta {
+  min-width: 26px; height: 26px; padding: 0 8px; border-radius: 13px;
+  display: inline-grid; place-items: center;
+  background: var(--ouro); color: #1a140a; font: 700 0.82rem/1 var(--fonte-corpo);
+}
+.escolha__conta[hidden] { display: none; }
+.escolha__seta {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px;
+  border: 1px solid rgb(214 170 85 / 0.6); border-radius: 50%; color: var(--ouro);
+  transition: transform 320ms var(--ease-out), background-color 220ms var(--ease-out), color 220ms var(--ease-out);
+}
+.escolha__botao[aria-expanded="true"] .escolha__seta { transform: rotate(180deg); background: var(--ouro); color: #1a140a; }
+.escolha__corpo {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--ease-out);
+}
+.escolha__corpo.is-aberto { grid-template-rows: 1fr; }
+.escolha__dentro {
+  min-height: 0; overflow: hidden;
+  background: rgb(14 13 10 / 0.78);
+  border: 1px solid transparent; border-top: 0; border-radius: 0 0 4px 4px;
+  transition: border-color 220ms var(--ease-out);
+}
+.escolha__corpo.is-aberto .escolha__dentro { border-color: var(--ouro); }
+.escolha__miolo { padding: 4px 22px 22px; }
 
 .abas {
   display: flex; gap: 4px; margin-top: 22px; overflow-x: auto;
@@ -432,7 +475,7 @@ em { font-style: italic; }
 .prato__foto--vazia span { color: var(--marfim-2); font: italic 0.9rem var(--fonte-titulos); }
 .prato__info { display: grid; align-content: start; gap: 4px; padding: 14px 16px 16px; }
 .prato__nome { font: 500 1.2rem/1.2 var(--fonte-titulos); color: var(--marfim); }
-.prato__desc { color: var(--marfim-2); font-size: 0.92rem; line-height: 1.45; }
+.prato__desc { color: var(--marfim-2); font-size: 0.92rem; font-weight: 500; line-height: 1.45; }
 .prato__marca {
   position: absolute; top: 10px; right: 10px;
   display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
@@ -532,7 +575,7 @@ em { font-style: italic; }
   .galeria { max-width: 640px; width: 100%; margin: 0 auto; }
   .tempos { grid-template-columns: 1fr; gap: 40px; }
   .experiencia__cabeca { grid-template-columns: 1fr; }
-  .contato__inner--cardapio { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chamada" "escolha" "pedido"; }
+  .contato__inner--cardapio { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-template-areas: "chamada" "escolha" "pedido"; }
   .contato__inner--cardapio .pedido { position: static; }
 }
 @media (max-width: 640px) {
@@ -544,7 +587,7 @@ em { font-style: italic; }
   .abertura__conteudo { transform: translate(-50%, -58%); }
   .abertura__acoes { flex-direction: column; gap: 18px; }
   .abertura__titulo { font-size: 2.2rem; }
-  .foto figcaption { margin-top: 24px; }
+  .foto figcaption { margin-top: 8px; }
   .galeria { aspect-ratio: auto; display: grid; gap: 40px; }
   .foto { position: relative; width: 100% !important; inset: auto !important; }
   .foto--b { width: 88% !important; justify-self: end; }
@@ -553,7 +596,9 @@ em { font-style: italic; }
   .foto--b .foto__moldura { transform: translate(-12px, -12px); }
   .pedido__linha { grid-template-columns: 1fr; }
   .escolha__grade { gap: 10px; }
-  .abas { margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
+  .escolha__botao { padding: 16px; gap: 12px; }
+  .escolha__miolo { padding: 4px 12px 14px; }
+  .abas { margin-inline: -12px; padding-inline: 12px;
     mask: linear-gradient(90deg, #000 85%, transparent); -webkit-mask: linear-gradient(90deg, #000 85%, transparent); }
   .prato__info { padding: 10px 12px 12px; }
   .prato__nome { font-size: 1.05rem; }

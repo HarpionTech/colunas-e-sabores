@@ -185,24 +185,25 @@ const CONFIG = {
     const cozinha = document.querySelector(".cozinha");
     const contato = document.querySelector(".contato__inner");
 
-    // A cena que sai sobe por baixo da cornija; a que entra sobe do pé da tela até o lugar
-    const sobe = () => window.innerHeight * 0.85;
+    // Depois da experiência, as cenas entram pela lateral direita e a que sai segue para a esquerda
+    const entra = () => window.innerWidth * 0.6;
+    const sai = () => -window.innerWidth * 0.45;
     const entraCozinha = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(".experiencia__inner", { y: () => -sobe(), autoAlpha: 0, duration: 1, ease: "power2.inOut" }, 0)
+      .to(".experiencia__inner", { x: sai, autoAlpha: 0, duration: 0.9, ease: "power2.inOut" }, 0)
       .fromTo(cozinha, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
-      .fromTo(".cozinha__inner", { y: sobe }, { y: 0, duration: 1.3 }, 0.15)
-      .from(".cozinha__texto > *", { autoAlpha: 0, y: 30, duration: 0.9, stagger: 0.07 }, 0.5)
+      .fromTo(".cozinha__inner", { x: entra }, { x: 0, duration: 1.3 }, 0.15)
+      .from(".cozinha__texto > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
       .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.9);
     fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.6 + i * 0.14));
 
     const entraContato = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(".cozinha__inner", { y: () => -sobe(), duration: 1, ease: "power2.inOut" }, 0)
-      .to(cozinha, { autoAlpha: 0, duration: 0.4, ease: "power1.in" }, 0.6)
+      .to(".cozinha__inner", { x: sai, duration: 0.9, ease: "power2.inOut" }, 0)
+      .to(cozinha, { autoAlpha: 0, duration: 0.4, ease: "power1.in" }, 0.5)
       .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
-      .fromTo(contato, { y: sobe }, { y: 0, duration: 1.3 }, 0.15)
-      .from(".contato__chamada > *", { autoAlpha: 0, y: 30, duration: 0.9, stagger: 0.07 }, 0.5)
-      .from(".pedido", { autoAlpha: 0, y: 40, duration: 1 }, 0.7)
-      .from(".prato:not([hidden])", { autoAlpha: 0, y: 26, duration: 0.7, stagger: 0.07 }, 0.85);
+      .fromTo(contato, { x: entra }, { x: 0, duration: 1.3 }, 0.15)
+      .from(".contato__chamada > *", { autoAlpha: 0, x: 40, duration: 0.9, stagger: 0.07 }, 0.5)
+      .from(".escolha", { autoAlpha: 0, x: 40, duration: 0.9 }, 0.7)
+      .from(".pedido", { autoAlpha: 0, x: 60, duration: 1 }, 0.6);
 
     ScrollTrigger.create({
       trigger: "[data-cenas]", start: "top top-=20%",
@@ -211,13 +212,6 @@ const CONFIG = {
     ScrollTrigger.create({
       trigger: "[data-contato]", start: "top 10%",
       onEnter: () => entraContato.timeScale(1).play(), onLeaveBack: () => entraContato.timeScale(1.6).reverse(),
-    });
-
-    fotos.forEach((foto) => {
-      gsap.to(foto, {
-        yPercent: (Number(foto.dataset.velocidade) || 0) * 0.6, ease: "none",
-        scrollTrigger: { trigger: "[data-cenas]", start: "top top", end: "bottom bottom", scrub: true },
-      });
     });
 
     ScrollTrigger.refresh();
@@ -234,14 +228,6 @@ const CONFIG = {
       scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
       scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
     });
-    if (window.innerWidth > 640) {
-      fotos.forEach((foto) => {
-        gsap.to(foto, {
-          yPercent: Number(foto.dataset.velocidade) || 0, ease: "none",
-          scrollTrigger: { trigger: ".galeria", start: "top bottom", end: "bottom top", scrub: true },
-        });
-      });
-    }
   });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());
@@ -391,7 +377,37 @@ function iniciaCardapio() {
     });
   };
   grade.addEventListener("change", atualiza);
+  grade.addEventListener("change", () => {
+    const n = marcados().length;
+    conta.textContent = n;
+    conta.hidden = n === 0;
+  });
   atualiza();
+
+  // Botão que abre e fecha o cardápio
+  const botao = document.querySelector("[data-escolha-botao]");
+  const corpo = document.querySelector("[data-escolha-corpo]");
+  const conta = document.querySelector("[data-escolha-conta]");
+  const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  botao.addEventListener("click", () => {
+    const abrir = botao.getAttribute("aria-expanded") !== "true";
+    botao.setAttribute("aria-expanded", String(abrir));
+    corpo.classList.toggle("is-aberto", abrir);
+    corpo.inert = !abrir;
+    if (abrir && !reduz) {
+      grade.classList.remove("is-trocando");
+      void grade.offsetWidth;
+      grade.classList.add("is-trocando");
+    }
+  });
+  corpo.addEventListener("transitionend", (e) => {
+    if (e.target === corpo && window.ScrollTrigger) window.ScrollTrigger.refresh();
+  });
+  lista.addEventListener("click", () => {
+    const n = marcados().length;
+    conta.textContent = n;
+    conta.hidden = n === 0;
+  });
 
   // linhas da mensagem, agrupadas por categoria
   return () => CONFIG.cardapio
