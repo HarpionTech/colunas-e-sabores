@@ -558,15 +558,13 @@ em { font-style: italic; }
 /* Rodapé: guardanapo de linho dobrado em triângulo, com a ponta para cima; a página termina na base dele */
 .rodape { position: relative; overflow: hidden; padding-top: 24px; }
 .guardanapo {
-  --g-larg: min(540px, 94vw);
+  --g-larg: min(780px, 96vw);
   position: relative; margin: 0 auto;
-  width: var(--g-larg); aspect-ratio: 2 / 1;
+  width: var(--g-larg); aspect-ratio: 2.8 / 1;
   container-type: inline-size;
   transform-origin: 50% 100%;
   filter: drop-shadow(0 -10px 22px rgb(0 0 0 / 0.6));
-  transition: transform 700ms var(--ease-out);
 }
-@media (hover: hover) { .guardanapo:hover { transform: rotate(-0.8deg); } }
 .guardanapo__tecido, .guardanapo__baixo { position: absolute; inset: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 .guardanapo__baixo {
   background: #120d09;
@@ -598,7 +596,7 @@ em { font-style: italic; }
 }
 @media (hover: hover) { .rodape__legal a:hover { color: var(--ouro-claro); } }
 @media (max-width: 640px) {
-  .guardanapo { aspect-ratio: 1 / 0.8; }
+  .guardanapo { aspect-ratio: 1 / 0.72; }
   .guardanapo__conteudo { bottom: 12%; gap: 8px; }
 }
 
