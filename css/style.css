@@ -87,9 +87,12 @@ em { font-style: italic; }
   transition: color 220ms var(--ease-out), background-size 300ms var(--ease-out);
 }
 .link-seta span { display: inline-block; transition: transform 260ms var(--ease-out); color: var(--ouro); }
+.link-seta span svg { display: block; }
+.link-seta--insta span { color: var(--ouro-claro); }
 @media (hover: hover) {
   .link-seta:hover { color: var(--ouro-claro); background-size: 40% 1px; }
   .link-seta:hover span { transform: translate(3px, -3px); }
+  .link-seta--insta:hover span { transform: scale(1.08); }
 }
 
 .rotulo {
