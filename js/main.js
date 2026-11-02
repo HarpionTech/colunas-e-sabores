@@ -1,0 +1,273 @@
+const CONFIG = {
+  // Número do WhatsApp só com dígitos, com DDI e DDD (ex.: "5511999998888").
+  // Vazio: o WhatsApp abre e a pessoa escolhe o contato.
+  whatsapp: "",
+};
+
+(() => {
+  const doc = document.documentElement;
+  const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const temGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+  const animar = temGsap && !reduz;
+
+  const topo = document.querySelector("[data-topo]");
+  const topoAltura = () => topo.offsetHeight;
+
+  document.querySelectorAll("[data-ano]").forEach((el) => { el.textContent = new Date().getFullYear(); });
+
+  let lenis = null;
+  if (animar && typeof window.Lenis !== "undefined") {
+    lenis = new window.Lenis({ lerp: 0.09, wheelMultiplier: 0.9 });
+    lenis.on("scroll", window.ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // Âncoras: rolagem suave com Lenis; foco no primeiro campo ao chegar no contato
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href");
+      if (id.length < 2) return;
+      const alvo = document.querySelector(id);
+      if (!alvo) return;
+      e.preventDefault();
+      const focar = () => {
+        if (id === "#contato") document.getElementById("tipo").focus({ preventScroll: true });
+        else if (id === "#conteudo") alvo.setAttribute("tabindex", "-1"), alvo.focus({ preventScroll: true });
+      };
+      if (lenis) {
+        lenis.scrollTo(id === "#inicio" ? 0 : alvo, { offset: id === "#contato" ? 0 : -topoAltura() + 1, duration: 1.6, onComplete: focar });
+      } else {
+        alvo.scrollIntoView({ behavior: reduz ? "auto" : "smooth" });
+        focar();
+      }
+      history.replaceState(null, "", id);
+    });
+  });
+
+  // Cabeçalho: sólido depois da abertura, some ao descer e volta ao subir
+  let ultimoY = window.scrollY;
+  const atualizaTopo = () => {
+    const y = window.scrollY;
+    const passou = y > window.innerHeight * 0.55;
+    topo.classList.toggle("is-solido", passou);
+    const descendo = y > ultimoY + 4;
+    const subindo = y < ultimoY - 4;
+    if (y > window.innerHeight * 2.2 && descendo && !topo.contains(document.activeElement)) topo.classList.add("is-oculto");
+    else if (subindo || y < window.innerHeight) topo.classList.remove("is-oculto");
+    ultimoY = y;
+  };
+  if (lenis) lenis.on("scroll", atualizaTopo);
+  else window.addEventListener("scroll", atualizaTopo, { passive: true });
+  atualizaTopo();
+
+  iniciaPedido();
+
+  if (!animar) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+  doc.classList.add("js-motion");
+
+  const cena = document.querySelector("[data-cena]");
+  const salao = document.querySelector("[data-salao]");
+  const brilho = document.querySelector("[data-brilho]");
+  const conteudo = document.querySelector("[data-abertura-conteudo]");
+
+  // Entrada: as luzes do salão se acendem e o título sobe linha a linha
+  const entrada = gsap.timeline({ defaults: { ease: "power3.out" } });
+  entrada
+    .fromTo(cena, { scale: 1.1, opacity: 0.2 }, { scale: 1, opacity: 1, duration: 2.6, ease: "power2.out" }, 0)
+    .fromTo(brilho, { opacity: 0 }, { opacity: 1, duration: 2.2, ease: "power1.inOut" }, 0.3)
+    .from(topo, { yPercent: -100, duration: 1, clearProps: "transform" }, 0.2)
+    .from(".sobretitulo__linha", { scaleX: 0, duration: 1.1, ease: "power2.inOut" }, 0.25)
+    .from(".sobretitulo", { opacity: 0, letterSpacing: "0.6em", duration: 1.2 }, 0.25)
+    .from("[data-linha]", { yPercent: 115, duration: 1.1, stagger: 0.14 }, 0.35)
+    .from(".abertura [data-entra]:not(.sobretitulo)", { opacity: 0, y: 18, duration: 0.9, stagger: 0.12 }, 0.95)
+    .from(".trilho", { opacity: 0, duration: 1.2 }, 1.1);
+
+  gsap.to(brilho, { opacity: 0.82, duration: 2.8, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.6 });
+
+  // Rolagem: a câmera avança pelo salão em direção à mesa
+  const avanco = gsap.timeline({
+    scrollTrigger: { trigger: "[data-abertura]", start: "top top", end: "bottom bottom", scrub: 0.8, invalidateOnRefresh: true },
+  });
+  const camada = document.querySelector("[data-camada]");
+  avanco
+    .fromTo(camada,
+      { y: () => -Math.max(0, camada.offsetHeight - cena.offsetHeight) * 0.13 },
+      { y: () => -Math.max(0, camada.offsetHeight - cena.offsetHeight) * 0.42, ease: "power1.inOut", duration: 1 }, 0)
+    .to(cena, { scale: 1.32, ease: "power1.in", duration: 1 }, 0)
+    .to(conteudo, { opacity: 0, y: -70, ease: "power1.in", duration: 0.38 }, 0)
+    .to(".abertura__rolagem, .trilho", { opacity: 0, ease: "none", duration: 0.18 }, 0)
+    .to(cena, { opacity: 0.3, ease: "power1.in", duration: 0.4 }, 0.6);
+
+  // Leve paralaxe com o ponteiro
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const px = gsap.quickTo(salao, "x", { duration: 1.4, ease: "power3.out" });
+    const py = gsap.quickTo(salao, "y", { duration: 1.4, ease: "power3.out" });
+    document.querySelector("[data-abertura]").addEventListener("pointermove", (e) => {
+      px((e.clientX / window.innerWidth - 0.5) * -18);
+      py((e.clientY / window.innerHeight - 0.5) * -12);
+    });
+  }
+
+  iniciaPoeira(document.querySelector("[data-poeira]"));
+
+  // Revelações de seção: uma vez só
+  gsap.set("[data-revela]", { opacity: 0, y: 40 });
+  ScrollTrigger.batch("[data-revela]", {
+    start: "top 86%",
+    once: true,
+    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.1, overwrite: true }),
+  });
+
+  gsap.from(".cardapio__fio", {
+    scaleX: 0, transformOrigin: "left center", duration: 1.2, ease: "power2.out", stagger: 0.1,
+    scrollTrigger: { trigger: ".cardapio", start: "top 85%", once: true },
+  });
+
+  // Fotos: a janela abre de baixo para cima e a moldura se desloca para o lugar
+  document.querySelectorAll("[data-foto]").forEach((foto, i) => {
+    const janela = foto.querySelector(".foto__janela");
+    const img = janela.querySelector("img");
+    const moldura = foto.querySelector(".foto__moldura");
+    const tl = gsap.timeline({ scrollTrigger: { trigger: foto, start: "top 88%", once: true }, delay: i * 0.08 });
+    tl.fromTo(janela, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out" })
+      .from(img, { scale: 1.25, duration: 1.8, ease: "expo.out" }, 0)
+      .from(moldura, { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35)
+      .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
+  });
+
+  ScrollTrigger.matchMedia({
+    "(min-width: 641px)": () => {
+      document.querySelectorAll("[data-foto]").forEach((foto) => {
+        gsap.to(foto, {
+          yPercent: Number(foto.dataset.velocidade) || 0, ease: "none",
+          scrollTrigger: { trigger: ".galeria", start: "top bottom", end: "bottom top", scrub: true },
+        });
+      });
+    },
+  });
+
+  gsap.fromTo(".contato__fundo img", { scale: 1.12 }, {
+    scale: 1, ease: "none",
+    scrollTrigger: { trigger: ".contato", start: "top bottom", end: "bottom bottom", scrub: true },
+  });
+
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+
+  function iniciaPoeira(canvas) {
+    const ctx = canvas.getContext("2d");
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const sc = sprite.getContext("2d");
+    const g = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, "rgba(255,226,160,1)");
+    g.addColorStop(0.25, "rgba(240,190,100,0.55)");
+    g.addColorStop(1, "rgba(214,170,85,0)");
+    sc.fillStyle = g;
+    sc.fillRect(0, 0, 64, 64);
+
+    let w = 0, h = 0, dpr = 1, particulas = [], ativo = false, raf = 0;
+    const nova = (y) => ({
+      x: Math.random() * w,
+      y: y ?? Math.random() * h,
+      r: 2 + Math.random() * 6,
+      vy: 0.08 + Math.random() * 0.32,
+      fase: Math.random() * Math.PI * 2,
+      amp: 0.2 + Math.random() * 0.5,
+      brilho: 0.25 + Math.random() * 0.6,
+    });
+    const medir = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.min(70, Math.round(w / 22));
+      particulas = Array.from({ length: n }, () => nova());
+    };
+    const quadro = (t) => {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of particulas) {
+        p.y -= p.vy;
+        p.x += Math.sin(t * 0.0004 + p.fase) * p.amp * 0.3;
+        if (p.y < -10) Object.assign(p, nova(h + 10));
+        const pisca = 0.55 + 0.45 * Math.sin(t * 0.0015 + p.fase);
+        ctx.globalAlpha = p.brilho * pisca;
+        ctx.drawImage(sprite, p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+      }
+      raf = requestAnimationFrame(quadro);
+    };
+    const liga = (on) => {
+      if (on === ativo) return;
+      ativo = on;
+      if (on) raf = requestAnimationFrame(quadro);
+      else cancelAnimationFrame(raf);
+    };
+    medir();
+    window.addEventListener("resize", medir);
+    new IntersectionObserver(([e]) => liga(e.isIntersecting && !document.hidden)).observe(canvas);
+    document.addEventListener("visibilitychange", () => liga(!document.hidden && canvas.getBoundingClientRect().bottom > 0));
+    gsap.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 2, delay: 1 });
+  }
+})();
+
+function iniciaPedido() {
+  const form = document.querySelector("[data-pedido]");
+  if (!form) return;
+  const status = form.querySelector("[data-pedido-status]");
+  const botao = form.querySelector('button[type="submit"]');
+  const rotuloBotao = botao.innerHTML;
+  const hoje = new Date();
+  const iso = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  form.data.min = iso(hoje);
+
+  const regras = {
+    tipo: (v) => v !== "",
+    data: (v) => v !== "" && v >= form.data.min,
+    pessoas: (v) => Number(v) >= 10 && Number(v) <= 2000,
+  };
+  const marca = (nome, ok) => {
+    const campo = form[nome];
+    const erro = document.getElementById(`${nome}-erro`);
+    campo.setAttribute("aria-invalid", String(!ok));
+    if (ok) campo.removeAttribute("aria-describedby");
+    else campo.setAttribute("aria-describedby", erro.id);
+    erro.hidden = ok;
+    return ok;
+  };
+  Object.keys(regras).forEach((nome) => {
+    form[nome].addEventListener("change", () => marca(nome, regras[nome](form[nome].value)));
+    // limpa o erro durante a digitação, antes do blur, para o botão não mudar de lugar no clique
+    form[nome].addEventListener("input", () => { if (regras[nome](form[nome].value)) marca(nome, true); });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const invalidos = Object.keys(regras).filter((nome) => !marca(nome, regras[nome](form[nome].value)));
+    if (invalidos.length) {
+      form[invalidos[0]].focus();
+      status.classList.remove("is-ok");
+      status.textContent = "Confira os campos destacados.";
+      return;
+    }
+    const [a, m, d] = form.data.value.split("-");
+    const texto = [
+      "Olá! Gostaria de um orçamento com a Colunas & Sabores.",
+      `Tipo de encontro: ${form.tipo.value}`,
+      `Data prevista: ${d}/${m}/${a}`,
+      `Pessoas: ${form.pessoas.value}`,
+    ].join("\n");
+    const numero = CONFIG.whatsapp.replace(/\D/g, "");
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+
+    botao.disabled = true;
+    botao.textContent = "Abrindo o WhatsApp…";
+    const janela = window.open(url, "_blank");
+    if (janela) janela.opener = null;
+    else window.location.href = url;
+    status.classList.add("is-ok");
+    status.textContent = "Mensagem pronta no WhatsApp. É só confirmar o envio por lá.";
+    setTimeout(() => { botao.disabled = false; botao.innerHTML = rotuloBotao; }, 1600);
+  });
+}
