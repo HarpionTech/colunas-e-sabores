@@ -586,7 +586,7 @@ em { font-style: italic; }
   vector-effect: non-scaling-stroke;
 }
 .guardanapo__conteudo {
-  position: absolute; left: 0; right: 0; bottom: 7%;
+  position: absolute; left: 0; right: 0; bottom: 17%;
   display: grid; justify-items: center; gap: 1.2cqw; text-align: center;
 }
 .rodape__logo { width: clamp(100px, 20cqw, 140px); height: auto; }
@@ -597,14 +597,9 @@ em { font-style: italic; }
   transition: color 200ms var(--ease-out);
 }
 @media (hover: hover) { .rodape__legal a:hover { color: var(--ouro-claro); } }
-.guardanapo__bordado {
-  position: absolute; left: 50%; top: 22%; width: clamp(20px, 4.4cqw, 26px); height: auto;
-  transform: translateX(-50%); opacity: 0.8;
-}
 @media (max-width: 640px) {
   .guardanapo { aspect-ratio: 1 / 0.8; }
-  .guardanapo__conteudo { bottom: 6%; gap: 8px; }
-  .guardanapo__bordado { top: 24%; }
+  .guardanapo__conteudo { bottom: 12%; gap: 8px; }
 }
 
 
