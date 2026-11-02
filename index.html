@@ -246,13 +246,22 @@
   </main>
 
   <footer class="rodape">
-    <div class="rodape__inner">
-      <picture>
-        <source srcset="assets/img/logo.webp" type="image/webp">
-        <img class="rodape__logo" src="assets/img/logo.png" alt="Colunas &amp; Sabores Buffet" width="760" height="253" loading="lazy">
-      </picture>
-      <p class="rodape__frase"><em>Seu próximo encontro começa aqui.</em></p>
-      <p class="rodape__legal">© <span data-ano>2026</span> Colunas &amp; Sabores Buffet · <a href="https://www.instagram.com/colunasesabores/" target="_blank" rel="noopener">Instagram</a></p>
+    <div class="rodape__mesa" aria-hidden="true"></div>
+    <div class="guardanapo" data-guardanapo>
+      <span class="guardanapo__baixo" aria-hidden="true"></span>
+      <span class="guardanapo__tecido" aria-hidden="true"></span>
+      <svg class="guardanapo__costura" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <polygon points="3,3.5 97,3.5 50,93" />
+      </svg>
+      <div class="guardanapo__conteudo">
+        <picture>
+          <source srcset="assets/img/logo.webp" type="image/webp">
+          <img class="rodape__logo" src="assets/img/logo.png" alt="Colunas &amp; Sabores Buffet" width="760" height="253" loading="lazy">
+        </picture>
+        <p class="rodape__frase"><em>Seu próximo encontro começa aqui.</em></p>
+        <p class="rodape__legal"><span>© <span data-ano>2026</span> Colunas &amp; Sabores Buffet</span> <a href="https://www.instagram.com/colunasesabores/" target="_blank" rel="noopener">Instagram</a></p>
+      </div>
+      <img class="guardanapo__bordado" src="assets/img/simbolo.webp" alt="" width="174" height="240" loading="lazy">
     </div>
   </footer>
 

@@ -178,6 +178,12 @@ const CONFIG = {
     .from(foto.querySelector(".foto__moldura"), { x: 0, y: 0, opacity: 0, duration: 1.2, ease: "power3.out" }, 0.35)
     .from(foto.querySelector("figcaption"), { opacity: 0, y: 10, duration: 0.8, ease: "power2.out" }, 0.6);
 
+  // Rodapé: o guardanapo desdobra a partir da borda da mesa
+  gsap.fromTo("[data-guardanapo]", { scaleY: 0.06, opacity: 0.4 }, {
+    scaleY: 1, opacity: 1, duration: 1.2, ease: "power3.out", clearProps: "transform,opacity",
+    scrollTrigger: { trigger: ".rodape", start: "top 96%", once: true },
+  });
+
   const palco = "(min-width: 1100px) and (min-height: 680px)";
   const mm = gsap.matchMedia();
 
