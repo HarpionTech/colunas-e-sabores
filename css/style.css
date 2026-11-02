@@ -19,10 +19,11 @@
   --largura: 1240px;
   --conteudo: 1240px;
   --topo-h: 84px;
+  --cornija-h: 44px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--topo-h); }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--topo-h) + var(--cornija-h)); }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 body {
@@ -120,7 +121,6 @@ em { font-style: italic; }
 }
 .topo.is-solido { background: rgb(14 13 10 / 0.88); border-color: rgb(214 170 85 / 0.28); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .topo.is-solido::before { opacity: 0; }
-.topo.is-oculto { transform: translateY(-100%); }
 .topo__inner {
   display: flex; align-items: center; gap: 32px;
   max-width: calc(var(--largura) + 2 * var(--gutter)); height: var(--topo-h);
@@ -256,9 +256,19 @@ em { font-style: italic; }
   opacity: 0.07; filter: saturate(0.6);
 }
 
-/* Cornija: transição da abertura para o salão */
-.cornija { display: block; position: relative; z-index: 2; }
-.cornija img { width: 100%; height: auto; filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.65)); }
+/* Cornija: sai da abertura e trava logo abaixo do cabeçalho */
+.cornija {
+  position: sticky; top: var(--topo-h); z-index: 45;
+  height: var(--cornija-h);
+  background:
+    url("../assets/img/cornija-esq.webp") left center / auto 100% no-repeat,
+    url("../assets/img/cornija-dir.webp") right center / auto 100% no-repeat;
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.7));
+}
+.cornija::before {
+  content: ""; position: absolute; inset: 0 calc(var(--cornija-h) * 0.66); z-index: -1;
+  background: url("../assets/img/cornija-meio.webp") left center / auto 100% repeat-x;
+}
 
 /* A experiência */
 .experiencia { position: relative; z-index: 1; background: linear-gradient(180deg, var(--fundo), rgb(17 17 14 / 0) 40vh); }
@@ -339,10 +349,10 @@ em { font-style: italic; }
 .cenas-ativas .cenas { position: relative; z-index: 2; height: 240vh; height: 240svh; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
 .cenas-ativas .cenas__palco { position: sticky; top: 0; height: 100vh; height: 100svh; }
 .cenas-ativas .cozinha { position: absolute; inset: 0; display: grid; align-items: center; pointer-events: auto; }
-.cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + 16px) 32px; }
-.cenas-ativas .galeria { width: min(100%, calc((100svh - var(--topo-h) - 120px) * 7 / 7.4)); justify-self: end; }
+.cenas-ativas .cozinha__inner { width: 100%; padding-block: calc(var(--topo-h) + var(--cornija-h) + 16px) 32px; }
+.cenas-ativas .galeria { width: min(100%, calc((100svh - var(--topo-h) - var(--cornija-h) - 120px) * 7 / 7.4)); justify-self: end; }
 .cenas-ativas .contato { z-index: 3; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
-.cenas-ativas .contato__inner { position: sticky; top: 0; pointer-events: auto; padding-top: calc(var(--topo-h) + 40px); }
+.cenas-ativas .contato__inner { position: sticky; top: 0; pointer-events: auto; padding-top: calc(var(--topo-h) + var(--cornija-h) + 40px); }
 .cenas-ativas .contato__espaco { display: block; height: 100vh; height: 100svh; }
 .cenas-ativas .contato__inner--cardapio { row-gap: 36px; }
 .cenas-ativas .pedido__linha { grid-template-columns: 1fr; }
@@ -358,7 +368,7 @@ em { font-style: italic; }
 }
 .contato__inner--cardapio .contato__chamada { grid-area: chamada; max-width: 760px; }
 .contato__inner--cardapio .escolha { grid-area: escolha; min-width: 0; }
-.contato__inner--cardapio .pedido { grid-area: pedido; position: sticky; top: calc(var(--topo-h) + 24px); }
+.contato__inner--cardapio .pedido { grid-area: pedido; position: sticky; top: calc(var(--topo-h) + var(--cornija-h) + 24px); }
 .contato__chamada .titulo-2 { font-size: clamp(2.4rem, 4.8vw, 4rem); }
 
 /* Cardápio para escolher */
@@ -526,7 +536,7 @@ em { font-style: italic; }
   .contato__inner--cardapio .pedido { position: static; }
 }
 @media (max-width: 640px) {
-  :root { --topo-h: 68px; }
+  :root { --topo-h: 68px; --cornija-h: 30px; }
   .topo__inner { gap: 16px; }
   .topo__logo img { height: 42px; }
   .topo__cta { min-height: 40px; padding: 8px 14px; font-size: 0.85rem; }

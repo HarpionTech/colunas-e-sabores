@@ -53,7 +53,7 @@ const CONFIG = {
   const animar = temGsap && !reduz;
 
   const topo = document.querySelector("[data-topo]");
-  const topoAltura = () => topo.offsetHeight;
+  const topoAltura = () => topo.offsetHeight + (document.querySelector(".cornija")?.offsetHeight || 0);
 
   document.querySelectorAll("[data-ano]").forEach((el) => { el.textContent = new Date().getFullYear(); });
 
@@ -97,17 +97,9 @@ const CONFIG = {
     });
   });
 
-  // Cabeçalho: sólido depois da abertura, some ao descer e volta ao subir
-  let ultimoY = window.scrollY;
+  // Cabeçalho: sólido depois da abertura; fica sempre visível porque a cornija trava logo abaixo dele
   const atualizaTopo = () => {
-    const y = window.scrollY;
-    const passou = y > window.innerHeight * 0.55;
-    topo.classList.toggle("is-solido", passou);
-    const descendo = y > ultimoY + 4;
-    const subindo = y < ultimoY - 4;
-    if (y > window.innerHeight * 2.2 && descendo && !topo.contains(document.activeElement)) topo.classList.add("is-oculto");
-    else if (subindo || y < window.innerHeight) topo.classList.remove("is-oculto");
-    ultimoY = y;
+    topo.classList.toggle("is-solido", window.scrollY > window.innerHeight * 0.55);
   };
   if (lenis) lenis.on("scroll", atualizaTopo);
   else window.addEventListener("scroll", atualizaTopo, { passive: true });
@@ -193,20 +185,24 @@ const CONFIG = {
     const cozinha = document.querySelector(".cozinha");
     const contato = document.querySelector(".contato__inner");
 
+    // A cena que sai sobe por baixo da cornija; a que entra sobe do pé da tela até o lugar
+    const sobe = () => window.innerHeight * 0.85;
     const entraCozinha = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(".experiencia__inner", { autoAlpha: 0, y: -60, duration: 0.6, ease: "power2.in" }, 0)
-      .fromTo(cozinha, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.3)
-      .from(".cozinha__texto > *", { autoAlpha: 0, y: 46, duration: 1, stagger: 0.08 }, 0.35)
-      .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.75);
-    fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.45 + i * 0.14));
+      .to(".experiencia__inner", { y: () => -sobe(), autoAlpha: 0, duration: 1, ease: "power2.inOut" }, 0)
+      .fromTo(cozinha, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
+      .fromTo(".cozinha__inner", { y: sobe }, { y: 0, duration: 1.3 }, 0.15)
+      .from(".cozinha__texto > *", { autoAlpha: 0, y: 30, duration: 0.9, stagger: 0.07 }, 0.5)
+      .from(".cardapio__fio", { scaleX: 0, transformOrigin: "left center", duration: 1, stagger: 0.1, ease: "power2.out" }, 0.9);
+    fotos.forEach((foto, i) => entraCozinha.add(abreFoto(foto), 0.6 + i * 0.14));
 
     const entraContato = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
-      .to(cozinha, { autoAlpha: 0, y: -50, scale: 0.97, duration: 0.6, ease: "power2.in" }, 0)
-      .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.3)
-      .from(".contato__chamada > *", { autoAlpha: 0, y: 40, duration: 0.9, stagger: 0.08 }, 0.35)
-      .from(".escolha", { autoAlpha: 0, y: 50, duration: 1 }, 0.5)
-      .from(".pedido", { autoAlpha: 0, x: 60, duration: 1 }, 0.6)
-      .from(".prato:not([hidden])", { autoAlpha: 0, y: 26, duration: 0.7, stagger: 0.07 }, 0.75);
+      .to(".cozinha__inner", { y: () => -sobe(), duration: 1, ease: "power2.inOut" }, 0)
+      .to(cozinha, { autoAlpha: 0, duration: 0.4, ease: "power1.in" }, 0.6)
+      .fromTo(contato, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.15)
+      .fromTo(contato, { y: sobe }, { y: 0, duration: 1.3 }, 0.15)
+      .from(".contato__chamada > *", { autoAlpha: 0, y: 30, duration: 0.9, stagger: 0.07 }, 0.5)
+      .from(".pedido", { autoAlpha: 0, y: 40, duration: 1 }, 0.7)
+      .from(".prato:not([hidden])", { autoAlpha: 0, y: 26, duration: 0.7, stagger: 0.07 }, 0.85);
 
     ScrollTrigger.create({
       trigger: "[data-cenas]", start: "top top-=40%",
