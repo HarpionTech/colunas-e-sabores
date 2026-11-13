@@ -6,20 +6,49 @@
   <title>Colunas &amp; Sabores Buffet | Ágapes e celebrações maçônicas</title>
   <meta name="description" content="Buffet para ágapes, sessões magnas, aniversários de loja e celebrações maçônicas. Peça seu orçamento pelo WhatsApp.">
   <meta name="theme-color" content="#11110e">
+  <link rel="canonical" href="https://harpiontech.github.io/colunas-e-sabores/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Colunas &amp; Sabores Buffet">
-  <meta property="og:description" content="Uma entrada marcante. Um encontro inesquecível. Buffet para encontros e celebrações maçônicas.">
-  <meta property="og:image" content="assets/img/og.jpg">
+  <meta property="og:site_name" content="Colunas &amp; Sabores Buffet">
+  <meta property="og:url" content="https://harpiontech.github.io/colunas-e-sabores/">
+  <meta property="og:title" content="Colunas &amp; Sabores | Buffet para ágapes e sessões magnas">
+  <meta property="og:description" content="Buffet para ágapes, sessões magnas, aniversários de loja e celebrações maçônicas. Monte seu cardápio e peça orçamento pelo WhatsApp.">
+  <meta property="og:image" content="https://harpiontech.github.io/colunas-e-sabores/assets/img/og.jpg">
+  <meta property="og:image:secure_url" content="https://harpiontech.github.io/colunas-e-sabores/assets/img/og.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mesa posta em salão de banquete, com colunas e luz quente">
   <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Colunas &amp; Sabores | Buffet para ágapes e sessões magnas">
+  <meta name="twitter:description" content="Buffet para ágapes, sessões magnas, aniversários de loja e celebrações maçônicas.">
+  <meta name="twitter:image" content="https://harpiontech.github.io/colunas-e-sabores/assets/img/og.jpg">
   <link rel="icon" href="assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="assets/img/favicon-32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/img/salao.webp" type="image/webp">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/eb-garamond-normal-400-700-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/lato-normal-400-latin.woff2" crossorigin>
+  <link rel="preload" as="image" type="image/webp" href="assets/img/salao.webp"
+        imagesrcset="assets/img/salao-800.webp 800w, assets/img/salao-1200.webp 1200w, assets/img/salao.webp 1536w"
+        imagesizes="(max-aspect-ratio: 2/3) 70vh, 104vw">
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "@id": "https://harpiontech.github.io/colunas-e-sabores/#buffet",
+    "name": "Colunas & Sabores Buffet",
+    "description": "Buffet para ágapes, sessões magnas, aniversários de loja e celebrações maçônicas.",
+    "url": "https://harpiontech.github.io/colunas-e-sabores/",
+    "image": "https://harpiontech.github.io/colunas-e-sabores/assets/img/og.jpg",
+    "logo": "https://harpiontech.github.io/colunas-e-sabores/assets/img/logo.png",
+    "telephone": "+55 48 9807-9937",
+    "sameAs": ["https://www.instagram.com/colunasesabores/"],
+    "hasMenu": "https://harpiontech.github.io/colunas-e-sabores/#contato"
+  }
+  </script>
 </head>
 <body>
   <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -54,8 +83,12 @@
         <div class="abertura__cena" data-cena>
           <div class="abertura__camada" data-camada>
             <picture data-salao>
-              <source srcset="assets/img/salao.webp" type="image/webp">
-              <img class="abertura__img" src="assets/img/salao.jpg" alt="" width="1536" height="2304" fetchpriority="high">
+              <source type="image/webp"
+                      srcset="assets/img/salao-800.webp 800w, assets/img/salao-1200.webp 1200w, assets/img/salao.webp 1536w"
+                      sizes="(max-aspect-ratio: 2/3) 70vh, 104vw">
+              <img class="abertura__img" src="assets/img/salao.jpg" alt="" width="1536" height="2304" fetchpriority="high"
+                   srcset="assets/img/salao-800.jpg 800w, assets/img/salao-1200.jpg 1200w, assets/img/salao.jpg 1536w"
+                   sizes="(max-aspect-ratio: 2/3) 70vh, 104vw">
             </picture>
             <span class="abertura__brilho" aria-hidden="true" data-brilho></span>
           </div>
@@ -113,7 +146,7 @@
           <figure class="foto foto--a" data-foto>
             <span class="foto__moldura" aria-hidden="true"></span>
             <div class="foto__janela">
-              <video class="foto__video" muted loop playsinline preload="none" poster="assets/video/cozinha-gratinado.jpg" width="464" height="832" aria-label="Gratinado com cebolinha sendo servido no réchaud" data-video>
+              <video class="foto__video" muted loop playsinline preload="none" poster="assets/video/cozinha-gratinado.jpg" width="464" height="832" aria-hidden="true" data-video>
                 <source src="assets/video/cozinha-gratinado.mp4" type="video/mp4">
               </video>
             </div>
@@ -121,7 +154,7 @@
           </figure>
           <figure class="foto foto--b" data-foto>
             <div class="foto__janela">
-              <video class="foto__video" muted loop playsinline preload="none" poster="assets/video/cozinha-cubas.jpg" width="720" height="1280" aria-label="Pratos quentes do buffet em cubas no réchaud" data-video>
+              <video class="foto__video" muted loop playsinline preload="none" poster="assets/video/cozinha-cubas.jpg" width="720" height="1280" aria-hidden="true" data-video>
                 <source src="assets/video/cozinha-cubas.mp4" type="video/mp4">
               </video>
             </div>
@@ -229,7 +262,8 @@
             </div>
             <div class="campo">
               <label for="pessoas">Pessoas</label>
-              <input id="pessoas" name="pessoas" type="number" inputmode="numeric" min="10" max="2000" placeholder="Ex.: 80" required>
+              <input id="pessoas" name="pessoas" type="number" inputmode="numeric" min="10" max="2000" placeholder="Ex.: 80" required aria-describedby="pessoas-dica">
+              <p class="campo__dica" id="pessoas-dica">Mínimo de 10 pessoas.</p>
               <p class="campo__erro" id="pessoas-erro" hidden>Informe a partir de 10 pessoas.</p>
             </div>
           </div>
@@ -262,9 +296,9 @@
       </div>    </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" defer></script>
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

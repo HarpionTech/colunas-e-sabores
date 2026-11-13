@@ -1,7 +1,7 @@
 const CONFIG = {
   // Número do WhatsApp só com dígitos, com DDI e DDD (ex.: "5511999998888").
   // Vazio: o WhatsApp abre e a pessoa escolhe o contato.
-  whatsapp: "",
+  whatsapp: "554898079937",
 
   // Cardápio da seção de contato. Para trocar a foto de um prato, salve a imagem em assets/img
   // (jpg + webp com o mesmo nome) e informe o caminho sem extensão em `foto`.
@@ -110,15 +110,41 @@ const CONFIG = {
 
   const abreCardapio = iniciaPedido();
 
-  // Vídeos da cozinha: sem som, em loop, tocando só enquanto aparecem na tela
+  // Vídeos da cozinha: sem som, em loop, tocando só enquanto aparecem na tela, com botão de pausa
   const videos = [...document.querySelectorAll("[data-video]")];
+  const ICONE_PAUSA = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+  const ICONE_PLAY = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>';
+  videos.forEach((v) => {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "video__botao";
+    const desenha = () => {
+      const tocando = !v.paused;
+      botao.innerHTML = tocando ? ICONE_PAUSA : ICONE_PLAY;
+      botao.setAttribute("aria-label", tocando ? "Pausar vídeo" : "Reproduzir vídeo");
+    };
+    botao.addEventListener("click", () => {
+      if (v.paused) {
+        delete v.dataset.pausadoPeloUsuario;
+        v.preload = "auto";
+        v.play().catch(() => {});
+      } else {
+        v.dataset.pausadoPeloUsuario = "1";
+        v.pause();
+      }
+    });
+    v.addEventListener("play", desenha);
+    v.addEventListener("pause", desenha);
+    desenha();
+    v.parentElement.appendChild(botao);
+  });
   if (!reduz && "IntersectionObserver" in window) {
     const observa = new IntersectionObserver((entradas) => {
       entradas.forEach(({ target, isIntersecting }) => {
-        if (isIntersecting) {
+        if (isIntersecting && !target.dataset.pausadoPeloUsuario) {
           target.preload = "auto";
           target.play().catch(() => {});
-        } else {
+        } else if (!isIntersecting) {
           target.pause();
         }
       });
@@ -476,8 +502,10 @@ function iniciaPedido() {
     const campo = form[nome];
     const erro = document.getElementById(`${nome}-erro`);
     campo.setAttribute("aria-invalid", String(!ok));
-    if (ok) campo.removeAttribute("aria-describedby");
-    else campo.setAttribute("aria-describedby", erro.id);
+    const dica = document.getElementById(`${nome}-dica`);
+    const ligados = [ok ? null : erro.id, dica ? dica.id : null].filter(Boolean).join(" ");
+    if (ligados) campo.setAttribute("aria-describedby", ligados);
+    else campo.removeAttribute("aria-describedby");
     erro.hidden = ok;
     return ok;
   };

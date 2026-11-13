@@ -13,8 +13,8 @@ Abrir com qualquer servidor estático (ex.: `python -m http.server`) e acessar `
 
 ## Pendências com o cliente
 
-1. **Número do WhatsApp** — preencher `CONFIG.whatsapp` no topo de `js/main.js` (só dígitos, com 55 e DDD).
-   Enquanto estiver vazio, o botão abre o WhatsApp com a mensagem pronta e a pessoa escolhe o contato.
+1. **WhatsApp** — configurado em `CONFIG.whatsapp` (`js/main.js`) com o número do buffet, só dígitos com 55 e DDD.
+   Testar no celular: o botão tem que abrir direto a conversa do buffet com a mensagem pronta.
 2. **Cardápio e fotos dos pratos** — os pratos do "Monte seu cardápio" são exemplos e ficam em `CONFIG.cardapio`
    (`js/main.js`): nome, descrição e foto de cada um. Para pôr a foto de um prato, salvar `assets/img/<nome>.jpg` e
    `.webp` (proporção 4:3) e informar `foto: "assets/img/<nome>"`. Sem foto, o card mostra o símbolo da casa.
